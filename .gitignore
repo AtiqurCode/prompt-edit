@@ -37,3 +37,6 @@ __screenshots__/
 
 # Vite
 *.timestamp-*-*.mjs
+
+# Local reference export (Kajabi source dump)
+prompt-edit.html
