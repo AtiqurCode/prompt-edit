@@ -1,0 +1,45 @@
+<script setup lang="ts">
+import { sfxDragAndDrop, sfxMuted, sfxWithSound, soundCategories } from '@/data/soundCategories'
+import MediaPreviewFacade from './MediaPreviewFacade.vue'
+</script>
+
+<template>
+  <div class="mt-6 space-y-6">
+    <div class="grid grid-cols-2 gap-3">
+      <div>
+        <MediaPreviewFacade :wistia-id="sfxMuted.wistiaId" :label="sfxMuted.label" aspect="aspect-4/3" />
+        <p class="mt-1.5 text-center text-xs font-semibold text-gray-400 uppercase">🔇 {{ sfxMuted.label }}</p>
+      </div>
+      <div>
+        <MediaPreviewFacade :wistia-id="sfxWithSound.wistiaId" :label="sfxWithSound.label" aspect="aspect-4/3" />
+        <p class="mt-1.5 text-center text-xs font-semibold text-brand-cta uppercase">
+          🔊 {{ sfxWithSound.label }}
+        </p>
+      </div>
+    </div>
+
+    <div>
+      <p class="text-xs font-semibold tracking-widest text-gray-400 uppercase">
+        Click on a category to hear examples
+      </p>
+      <div class="mt-3 grid grid-cols-3 gap-3">
+        <div v-for="sound in soundCategories" :key="sound.wistiaId">
+          <MediaPreviewFacade :wistia-id="sound.wistiaId" :label="sound.name" aspect="aspect-square" />
+          <p class="mt-1 text-center text-xs font-medium text-gray-500">{{ sound.name }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <p class="text-xs font-semibold tracking-widest text-gray-400 uppercase">
+        Just drag, drop, and go
+      </p>
+      <MediaPreviewFacade
+        :wistia-id="sfxDragAndDrop.wistiaId"
+        :label="sfxDragAndDrop.label"
+        aspect="aspect-video"
+        class="mt-3"
+      />
+    </div>
+  </div>
+</template>
