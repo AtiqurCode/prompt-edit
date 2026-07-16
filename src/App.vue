@@ -1,85 +1,46 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+import ScrollProgressBar from '@/components/shared/ScrollProgressBar.vue'
+import EditorialBreak from '@/components/shared/EditorialBreak.vue'
+import SiteHeader from '@/components/sections/SiteHeader.vue'
+import HeroSection from '@/components/sections/HeroSection.vue'
+import StatBar from '@/components/shared/StatBar.vue'
+import OfferIntroSection from '@/components/sections/OfferIntroSection.vue'
+import ToolsSection from '@/components/sections/ToolsSection.vue'
+import EditingPluginsSection from '@/components/sections/EditingPluginsSection.vue'
+import PricingSection from '@/components/sections/PricingSection.vue'
+import TemplatesLibrarySection from '@/components/sections/TemplatesLibrarySection.vue'
+import TestimonialsSection from '@/components/sections/TestimonialsSection.vue'
+import WhoItsForSection from '@/components/sections/WhoItsForSection.vue'
+import FaqSection from '@/components/sections/FaqSection.vue'
+import FinalCtaSection from '@/components/sections/FinalCtaSection.vue'
+import SiteFooter from '@/components/sections/SiteFooter.vue'
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
-  </header>
-
-  <RouterView />
+  <ScrollProgressBar />
+  <SiteHeader />
+  <main>
+    <HeroSection />
+    <StatBar />
+    <OfferIntroSection />
+    <EditorialBreak
+      label="Creative tools"
+      headline="Browse the full AI marketplace without leaving your workflow."
+      tone="dark"
+    />
+    <ToolsSection />
+    <EditingPluginsSection />
+    <EditorialBreak
+      label="Templates library"
+      headline="Make every project look like it came from a premium asset marketplace."
+      tone="light"
+    />
+    <TemplatesLibrarySection />
+    <TestimonialsSection />
+    <WhoItsForSection />
+    <PricingSection />
+    <FaqSection />
+    <FinalCtaSection />
+  </main>
+  <SiteFooter />
 </template>
-
-<style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
-}
-
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
-
-nav a:first-of-type {
-  border: 0;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
-}
-</style>

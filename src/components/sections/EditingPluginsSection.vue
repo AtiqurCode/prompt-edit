@@ -1,0 +1,58 @@
+<script setup lang="ts">
+import MediaPreviewFacade from '@/components/shared/MediaPreviewFacade.vue'
+import SiteButton from '@/components/shared/SiteButton.vue'
+import ScrollReveal from '@/components/shared/ScrollReveal.vue'
+</script>
+
+<template>
+  <section class="bg-white py-20 sm:py-28">
+    <div class="mx-auto grid max-w-7xl items-center gap-12 px-6 lg:grid-cols-2 lg:gap-20">
+      <ScrollReveal :delay="120" class="order-2 lg:order-1">
+        <div class="relative">
+          <div class="overflow-hidden rounded-4xl border border-black/8 bg-brand-ink p-2 shadow-2xl shadow-brand-ink/10">
+            <MediaPreviewFacade
+              wistia-id="821b33oy7g"
+              label="AI Editing Plugins demo"
+              aspect="aspect-video"
+              class="rounded-3xl"
+            />
+          </div>
+          <span class="absolute -top-4 left-6 rounded-full bg-white px-4 py-2 text-sm font-semibold text-brand-ink shadow-lg">
+            Premiere Pro
+          </span>
+          <span class="absolute -bottom-4 right-6 rounded-full bg-brand-cta px-4 py-2 text-sm font-semibold text-white shadow-lg">
+            DaVinci Resolve
+          </span>
+        </div>
+      </ScrollReveal>
+
+      <ScrollReveal class="order-1 lg:order-2">
+        <p class="text-sm font-semibold tracking-[0.28em] text-brand-cta uppercase">AI editing plugins</p>
+        <h2 class="mt-4 text-4xl font-extrabold tracking-tight text-brand-ink sm:text-5xl">
+          Soundtrack where you edit.
+        </h2>
+        <p class="mt-6 max-w-lg text-lg leading-8 text-gray-600">
+          No need to open a browser window. The plugins open inside your favorite editing software,
+          letting you generate AI creations and instantly add them to any project.
+        </p>
+        <ul class="mt-8 space-y-4 text-sm text-gray-600">
+          <li class="flex gap-3">
+            <span class="mt-2 h-2 w-2 shrink-0 rounded-full bg-brand-cta" />
+            Generate inside Premiere Pro or DaVinci Resolve
+          </li>
+          <li class="flex gap-3">
+            <span class="mt-2 h-2 w-2 shrink-0 rounded-full bg-brand-cta" />
+            Drop results straight into your timeline
+          </li>
+          <li class="flex gap-3">
+            <span class="mt-2 h-2 w-2 shrink-0 rounded-full bg-brand-cta" />
+            Keep your edit flow uninterrupted
+          </li>
+        </ul>
+        <SiteButton href="#pricing" size="lg" class="mt-10">
+          Click To Get Started Today
+        </SiteButton>
+      </ScrollReveal>
+    </div>
+  </section>
+</template>
