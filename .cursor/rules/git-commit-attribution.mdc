@@ -1,0 +1,53 @@
+---
+description: Enforce local git author identity; never Claude, Cursor, or global user
+alwaysApply: true
+---
+
+# Git commit & push attribution
+
+This repo must never publish AI or foreign git identities.
+
+## Required local identity
+
+Always use this repo-local author only:
+
+- `user.name` = `AtiqurCode`
+- `user.email` = `atqur9@gmail.com`
+
+Before any commit or push, verify:
+
+```sh
+git config --local --get user.name
+git config --local --get user.email
+```
+
+If missing or wrong, set them locally (never rely on global):
+
+```sh
+git config --local user.name "AtiqurCode"
+git config --local user.email "atqur9@gmail.com"
+```
+
+## Hard bans
+
+Do **not** create, amend, or push commits that include any of the following as author, committer, co-author, trailer, or message signature:
+
+- Claude / Anthropic
+- Cursor / CursorAgent / cursoragent
+- Any other global git user (for example `Atiqur <atiqur@itconquest.com>`)
+- `Co-authored-by` trailers for AI tools
+- Commit messages that advertise an AI assistant as helper/author
+
+## Commit message rules
+
+- Keep messages human and project-focused
+- No phrases like "Generated with Claude", "via Cursor", "Cursor Agent", etc.
+- No AI model names in commit bodies or trailers
+
+## Push checklist
+
+Before `git push`:
+
+1. Confirm branch is the intended one (`master` for this repo)
+2. Confirm latest commit author is `AtiqurCode <atqur9@gmail.com>`
+3. Reject/fix the commit if author/committer is anything else

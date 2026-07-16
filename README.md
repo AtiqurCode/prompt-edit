@@ -6,6 +6,23 @@ This file is a running log of the project from first to last — what was done, 
 
 ---
 
+## Repo conventions (important)
+
+Git commits/pushes for this project must use the **local** identity only:
+
+- Name: `AtiqurCode`
+- Email: `atqur9@gmail.com`
+
+Do **not** commit or push with:
+
+- Claude / Anthropic
+- Cursor / CursorAgent
+- Any other global git user
+
+See `AGENTS.md` and `.cursor/rules/git-commit-attribution.mdc` for the full rule.
+
+---
+
 ## The brief
 
 The job posting skips résumé review entirely: candidates prove themselves by redesigning a real page from the company's own site to be "more intuitive and better than we made it," then publishing it and applying via a Google Form. Requirements called out explicitly:

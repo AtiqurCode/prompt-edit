@@ -1,0 +1,38 @@
+# Agent rules for this repository
+
+## Git identity (mandatory)
+
+This project must only commit and push as:
+
+- **Name:** `AtiqurCode`
+- **Email:** `atqur9@gmail.com`
+
+Use **repo-local** git config only. Do not use the machine global git user.
+
+```sh
+git config --local user.name "AtiqurCode"
+git config --local user.email "atqur9@gmail.com"
+```
+
+### Never push these identities
+
+- Claude / Anthropic
+- Cursor / CursorAgent / cursoragent
+- Any other global git user
+- Any AI `Co-authored-by` trailer
+
+### Before every commit/push
+
+1. Check `git config --local user.name` and `git config --local user.email`
+2. Check `git log -1 --format='%an <%ae>'`
+3. Abort if the author is not `AtiqurCode <atqur9@gmail.com>`
+
+## Commit message style
+
+- Human-readable, project-focused
+- No AI tool branding in messages or trailers
+- Prefer serial, meaningful commits over one giant dump
+
+## Branch
+
+Default branch for this repo is `master` (not `main`).
