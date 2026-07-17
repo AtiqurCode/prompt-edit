@@ -27,6 +27,7 @@ function setPositionFromClientX(clientX: number) {
 
 function onPointerDown(event: PointerEvent) {
   isDragging.value = true
+  ;(event.currentTarget as HTMLElement).setPointerCapture?.(event.pointerId)
   setPositionFromClientX(event.clientX)
   window.addEventListener('pointermove', onPointerMove)
   window.addEventListener('pointerup', onPointerUp)
@@ -45,17 +46,11 @@ function onPointerUp() {
 
 function onKeydown(event: KeyboardEvent) {
   const step = event.shiftKey ? 20 : 5
-  if (event.key === 'ArrowLeft') {
-    position.value = Math.max(0, position.value - step)
-  } else if (event.key === 'ArrowRight') {
-    position.value = Math.min(100, position.value + step)
-  } else if (event.key === 'Home') {
-    position.value = 0
-  } else if (event.key === 'End') {
-    position.value = 100
-  } else {
-    return
-  }
+  if (event.key === 'ArrowLeft') position.value = Math.max(0, position.value - step)
+  else if (event.key === 'ArrowRight') position.value = Math.min(100, position.value + step)
+  else if (event.key === 'Home') position.value = 0
+  else if (event.key === 'End') position.value = 100
+  else return
   event.preventDefault()
 }
 </script>
@@ -63,41 +58,27 @@ function onKeydown(event: KeyboardEvent) {
 <template>
   <div
     ref="containerRef"
-    class="relative aspect-4/3 w-full touch-none overflow-hidden rounded-md bg-brand-ink select-none sm:aspect-video"
+    class="relative aspect-4/3 w-full touch-none overflow-hidden rounded-xl bg-black select-none sm:aspect-video"
     @pointerdown="onPointerDown"
   >
-    <img
-      :src="beforeSrc"
-      :alt="beforeLabel"
-      draggable="false"
-      class="absolute inset-0 h-full w-full object-cover"
-    >
+    <img :src="beforeSrc" :alt="beforeLabel" draggable="false" class="absolute inset-0 h-full w-full object-cover">
 
     <div
       class="absolute inset-0 h-full w-full overflow-hidden"
       :style="{ clipPath: `inset(0 ${100 - position}% 0 0)` }"
     >
-      <img
-        :src="afterSrc"
-        :alt="afterLabel"
-        draggable="false"
-        class="absolute inset-0 h-full w-full object-cover"
-      >
+      <img :src="afterSrc" :alt="afterLabel" draggable="false" class="absolute inset-0 h-full w-full object-cover">
     </div>
 
-    <span
-      class="pointer-events-none absolute top-3 left-3 rounded-md border-2 border-white bg-brand-ink px-3 py-1 text-xs font-semibold tracking-wide text-white uppercase"
-    >{{ beforeLabel }}</span>
-    <span
-      class="pointer-events-none absolute top-3 right-3 rounded-md border-2 border-brand-ink bg-brand-cta px-3 py-1 text-xs font-semibold tracking-wide text-brand-ink uppercase"
-    >{{ afterLabel }}</span>
+    <span class="pointer-events-none absolute top-3 left-3 rounded-md bg-black/70 px-2.5 py-1 text-[10px] font-semibold tracking-wide text-white uppercase backdrop-blur-sm">
+      {{ beforeLabel }}
+    </span>
+    <span class="pointer-events-none absolute top-3 right-3 rounded-md bg-brand-cta px-2.5 py-1 text-[10px] font-semibold tracking-wide text-brand-ink uppercase">
+      {{ afterLabel }}
+    </span>
 
-    <div
-      class="pointer-events-none absolute inset-0"
-      :style="{ transform: `translateX(${position}%)` }"
-    >
-      <div class="absolute inset-y-0 left-0 w-0.5 bg-white/80" />
-
+    <div class="pointer-events-none absolute inset-0" :style="{ transform: `translateX(${position}%)` }">
+      <div class="absolute inset-y-0 left-0 w-0.5 bg-white shadow-[0_0_12px_rgba(255,255,255,0.6)]" />
       <button
         type="button"
         role="slider"
@@ -105,11 +86,11 @@ function onKeydown(event: KeyboardEvent) {
         aria-valuemin="0"
         aria-valuemax="100"
         :aria-valuenow="Math.round(position)"
-        class="shadow-brutal-sm brutal-press pointer-events-auto absolute top-1/2 left-0 flex h-11 w-11 -translate-x-1/2 -translate-y-1/2 cursor-ew-resize items-center justify-center rounded-md border-[3px] border-brand-ink bg-white text-brand-ink outline-none focus-visible:ring-2 focus-visible:ring-brand-cta"
+        class="pointer-events-auto absolute top-1/2 left-0 flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 cursor-ew-resize items-center justify-center rounded-full border-2 border-white bg-white text-brand-ink shadow-lg outline-none transition-transform duration-150 hover:scale-105 focus-visible:ring-2 focus-visible:ring-brand-cta"
         @pointerdown.stop="onPointerDown"
         @keydown="onKeydown"
       >
-        <svg viewBox="0 0 24 24" class="h-5 w-5 fill-current">
+        <svg viewBox="0 0 24 24" class="h-5 w-5 fill-current" aria-hidden="true">
           <path d="M8 5l-6 7 6 7V5zm8 0v14l6-7-6-7z" />
         </svg>
       </button>

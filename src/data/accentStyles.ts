@@ -1,46 +1,38 @@
 import type { AccentColor } from '@/types/content'
 
-/**
- * Full literal Tailwind class strings per accent, so the compiler's content
- * scan picks them up even though the accent key is chosen at runtime.
- *
- * Flat neubrutalist chips: solid brand-derived fill, black border, hard
- * offset shadow, no tints/gradients. Text color is black/brand-ink except on
- * brand-blue-deep, which is dark enough to need white text (verified via
- * computed WCAG ratios — brand-blue-deep only clears 4.5:1 with white text).
- */
+/** Accent chips for asset categories — brand colors only, no purple. */
 export const accentStyles: Record<
   AccentColor,
   { badge: string; text: string; ring: string; glow: string }
 > = {
   cta: {
-    badge: 'bg-brand-cta text-brand-ink border-2 border-brand-ink shadow-brutal-sm',
+    badge: 'bg-brand-cta/15 text-brand-cta border border-brand-cta/35',
     text: 'text-brand-cta',
-    ring: 'border-brand-ink',
-    glow: 'bg-brand-cta',
+    ring: 'border-brand-cta/30',
+    glow: 'bg-brand-cta/20',
   },
   blue: {
-    badge: 'bg-brand-blue text-brand-ink border-2 border-brand-ink shadow-brutal-sm',
+    badge: 'bg-brand-blue/15 text-brand-blue border border-brand-blue/35',
     text: 'text-brand-blue',
-    ring: 'border-brand-ink',
-    glow: 'bg-brand-blue',
+    ring: 'border-brand-blue/30',
+    glow: 'bg-brand-blue/20',
   },
   blueDeep: {
-    badge: 'bg-brand-blue-deep text-white border-2 border-brand-ink shadow-brutal-sm',
-    text: 'text-brand-blue-deep',
-    ring: 'border-brand-ink',
-    glow: 'bg-brand-blue-deep',
+    badge: 'bg-brand-blue-deep/20 text-brand-blue border border-brand-blue-deep/40',
+    text: 'text-brand-blue',
+    ring: 'border-brand-blue-deep/30',
+    glow: 'bg-brand-blue-deep/25',
   },
   yellow: {
-    badge: 'bg-brand-yellow text-brand-ink border-2 border-brand-ink shadow-brutal-sm',
-    text: 'text-brand-ink',
-    ring: 'border-brand-ink',
-    glow: 'bg-brand-yellow',
+    badge: 'bg-brand-yellow/20 text-brand-yellow border border-brand-yellow/40',
+    text: 'text-brand-yellow',
+    ring: 'border-brand-yellow/30',
+    glow: 'bg-brand-yellow/15',
   },
   coral: {
-    badge: 'bg-brand-coral text-brand-ink border-2 border-brand-ink shadow-brutal-sm',
-    text: 'text-brand-ink',
-    ring: 'border-brand-ink',
-    glow: 'bg-brand-coral',
+    badge: 'bg-brand-coral/15 text-brand-coral border border-brand-coral/35',
+    text: 'text-brand-coral',
+    ring: 'border-brand-coral/30',
+    glow: 'bg-brand-coral/20',
   },
 }

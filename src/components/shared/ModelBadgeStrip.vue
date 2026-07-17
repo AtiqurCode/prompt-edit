@@ -4,26 +4,24 @@ import { modelBadges } from '@/data/modelBadges'
 
 <template>
   <div class="w-full">
-    <p class="mb-4 text-center text-xs font-semibold tracking-widest text-white/50 uppercase">
-      Every major AI model, in one place
-    </p>
+    <p class="mb-4 eyebrow text-center text-white/55">Every major AI model, in one place</p>
     <div
-      class="marquee-track relative flex overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]"
+      class="marquee-track relative flex overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]"
     >
-      <ul class="flex shrink-0 animate-marquee items-center gap-3 pr-3">
+      <ul class="flex shrink-0 animate-marquee items-center gap-2.5 pr-2.5">
         <li
           v-for="model in modelBadges"
           :key="model"
-          class="whitespace-nowrap rounded-md border-2 border-white bg-transparent px-4 py-2 text-sm font-semibold text-white"
+          class="whitespace-nowrap rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-sm font-medium text-white/80"
         >
           {{ model }}
         </li>
       </ul>
-      <ul class="flex shrink-0 animate-marquee items-center gap-3 pr-3" aria-hidden="true">
+      <ul class="flex shrink-0 animate-marquee items-center gap-2.5 pr-2.5" aria-hidden="true">
         <li
           v-for="model in modelBadges"
-          :key="model"
-          class="whitespace-nowrap rounded-md border-2 border-white bg-transparent px-4 py-2 text-sm font-semibold text-white"
+          :key="`dup-${model}`"
+          class="whitespace-nowrap rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-sm font-medium text-white/80"
         >
           {{ model }}
         </li>
