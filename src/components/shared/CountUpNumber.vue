@@ -14,6 +14,12 @@ const suffix = match ? match[2] : ''
 
 watch(inView, (isVisible) => {
   if (!isVisible) return
+
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    display.value = target.toLocaleString('en-US')
+    return
+  }
+
   const duration = 1100
   const start = performance.now()
 
