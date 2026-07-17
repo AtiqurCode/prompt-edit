@@ -16,18 +16,18 @@ function toggle(index: number) {
 </script>
 
 <template>
-  <div class="divide-y divide-gray-200 border-y border-gray-200">
+  <div class="divide-y-[3px] divide-brand-ink border-y-[3px] border-brand-ink">
     <div v-for="(item, index) in items" :key="item.question">
       <h3>
         <button
           type="button"
-          class="flex w-full items-center justify-between gap-4 py-5 text-left"
+          class="flex w-full items-center justify-between gap-4 rounded-lg py-5 text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-cta"
           :aria-expanded="openState.has(index)"
           :aria-controls="`faq-panel-${index}`"
           @click="toggle(index)"
         >
           <span class="flex items-baseline gap-3">
-            <span class="text-sm font-bold text-gray-300 tabular-nums">{{
+            <span class="font-display text-sm font-bold text-brand-slate/75 tabular-nums">{{
               String(index + 1).padStart(2, '0')
             }}</span>
             <span class="font-semibold text-brand-ink">{{ item.question }}</span>
@@ -46,7 +46,7 @@ function toggle(index: number) {
         :style="{ gridTemplateRows: openState.has(index) ? '1fr' : '0fr' }"
       >
         <div :id="`faq-panel-${index}`" class="overflow-hidden">
-          <p class="pb-5 pl-9 text-gray-600">{{ item.answer }}</p>
+          <p class="pb-5 pl-9 text-brand-slate">{{ item.answer }}</p>
         </div>
       </div>
     </div>

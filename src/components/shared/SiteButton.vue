@@ -1,36 +1,32 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
-import { useSpotlight } from '@/composables/useSpotlight'
+import { computed } from 'vue'
 
 const {
   href = '#pricing',
   variant = 'primary',
   size = 'md',
+  surface = 'dark',
 } = defineProps<{
   href?: string
   variant?: 'primary' | 'secondary'
   size?: 'md' | 'lg'
+  /** Background this button sits on — determines border/shadow color so it
+   * stays visible (a black border reads as invisible against brand-ink). */
+  surface?: 'light' | 'dark'
 }>()
 
-const el = ref<HTMLElement | null>(null)
-useSpotlight(el)
-
 const classes = computed(() => [
-  'group relative isolate inline-flex items-center justify-center overflow-hidden rounded-full border font-semibold transition duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-cta',
+  'brutal-press inline-flex cursor-pointer items-center justify-center rounded-md border-[3px] font-display font-bold whitespace-nowrap uppercase tracking-wide focus-visible:outline-2 focus-visible:outline-offset-2',
   size === 'lg' ? 'px-8 py-4 text-base' : 'px-6 py-3 text-sm',
-  variant === 'primary'
-    ? 'border-brand-cta/70 bg-brand-cta text-white shadow-[0_14px_34px_rgba(39,174,96,0.22)] hover:-translate-y-0.5 hover:bg-brand-cta-hover hover:shadow-[0_18px_40px_rgba(39,174,96,0.28)]'
-    : 'border-black/8 bg-white text-brand-ink shadow-sm hover:-translate-y-0.5 hover:bg-gray-50',
+  surface === 'dark'
+    ? 'shadow-brutal-invert border-white focus-visible:outline-white'
+    : 'shadow-brutal border-brand-ink focus-visible:outline-brand-ink',
+  variant === 'primary' ? 'bg-brand-cta text-brand-ink' : 'bg-white text-brand-ink',
 ])
 </script>
 
 <template>
-  <a ref="el" :href="href" :class="classes">
-    <span
-      v-if="variant === 'primary'"
-      class="pointer-events-none absolute inset-0 z-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-      style="background: radial-gradient(120px circle at var(--spot-x, 50%) var(--spot-y, 50%), rgba(255, 255, 255, 0.35), transparent 70%)"
-    />
-    <span class="relative"><slot /></span>
+  <a :href="href" :class="classes">
+    <slot />
   </a>
 </template>

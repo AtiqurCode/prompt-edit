@@ -63,7 +63,7 @@ function onKeydown(event: KeyboardEvent) {
 <template>
   <div
     ref="containerRef"
-    class="relative aspect-4/3 w-full touch-none overflow-hidden rounded-2xl bg-brand-ink select-none sm:aspect-video"
+    class="relative aspect-4/3 w-full touch-none overflow-hidden rounded-md bg-brand-ink select-none sm:aspect-video"
     @pointerdown="onPointerDown"
   >
     <img
@@ -86,32 +86,33 @@ function onKeydown(event: KeyboardEvent) {
     </div>
 
     <span
-      class="pointer-events-none absolute top-3 left-3 rounded-full bg-black/60 px-3 py-1 text-xs font-semibold tracking-wide text-white uppercase"
+      class="pointer-events-none absolute top-3 left-3 rounded-md border-2 border-white bg-brand-ink px-3 py-1 text-xs font-semibold tracking-wide text-white uppercase"
     >{{ beforeLabel }}</span>
     <span
-      class="pointer-events-none absolute top-3 right-3 rounded-full bg-brand-cta px-3 py-1 text-xs font-semibold tracking-wide text-white uppercase"
+      class="pointer-events-none absolute top-3 right-3 rounded-md border-2 border-brand-ink bg-brand-cta px-3 py-1 text-xs font-semibold tracking-wide text-brand-ink uppercase"
     >{{ afterLabel }}</span>
 
     <div
-      class="pointer-events-none absolute inset-y-0 w-0.5 bg-white/80"
-      :style="{ left: `${position}%` }"
-    />
-
-    <button
-      type="button"
-      role="slider"
-      :aria-label="`Drag to compare ${beforeLabel} and ${afterLabel}`"
-      aria-valuemin="0"
-      aria-valuemax="100"
-      :aria-valuenow="Math.round(position)"
-      class="absolute top-1/2 flex h-11 w-11 -translate-x-1/2 -translate-y-1/2 cursor-ew-resize items-center justify-center rounded-full bg-white text-brand-ink shadow-lg outline-none focus-visible:ring-2 focus-visible:ring-brand-cta"
-      :style="{ left: `${position}%` }"
-      @pointerdown.stop="onPointerDown"
-      @keydown="onKeydown"
+      class="pointer-events-none absolute inset-0"
+      :style="{ transform: `translateX(${position}%)` }"
     >
-      <svg viewBox="0 0 24 24" class="h-5 w-5 fill-current">
-        <path d="M8 5l-6 7 6 7V5zm8 0v14l6-7-6-7z" />
-      </svg>
-    </button>
+      <div class="absolute inset-y-0 left-0 w-0.5 bg-white/80" />
+
+      <button
+        type="button"
+        role="slider"
+        :aria-label="`Drag to compare ${beforeLabel} and ${afterLabel}`"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        :aria-valuenow="Math.round(position)"
+        class="shadow-brutal-sm brutal-press pointer-events-auto absolute top-1/2 left-0 flex h-11 w-11 -translate-x-1/2 -translate-y-1/2 cursor-ew-resize items-center justify-center rounded-md border-[3px] border-brand-ink bg-white text-brand-ink outline-none focus-visible:ring-2 focus-visible:ring-brand-cta"
+        @pointerdown.stop="onPointerDown"
+        @keydown="onKeydown"
+      >
+        <svg viewBox="0 0 24 24" class="h-5 w-5 fill-current">
+          <path d="M8 5l-6 7 6 7V5zm8 0v14l6-7-6-7z" />
+        </svg>
+      </button>
+    </div>
   </div>
 </template>

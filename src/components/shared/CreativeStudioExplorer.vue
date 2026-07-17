@@ -22,8 +22,8 @@ function selectItem(index: number) {
 </script>
 
 <template>
-  <div class="studio-shell overflow-hidden rounded-4xl border border-white/10">
-    <div class="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 px-5 py-4 sm:px-8">
+  <div class="shadow-brutal-invert-lg overflow-hidden rounded-lg border-[3px] border-white bg-brand-ink-soft">
+    <div class="flex flex-wrap items-center justify-between gap-4 border-b-[3px] border-white px-5 py-4 sm:px-8">
       <div>
         <p class="text-xs font-semibold tracking-[0.28em] text-brand-cta uppercase">Creative studio</p>
         <p class="mt-1 text-sm text-white/55">Browse image, video, and audio tools in one flow</p>
@@ -33,11 +33,11 @@ function selectItem(index: number) {
           v-for="category in toolCategories"
           :key="category.id"
           type="button"
-          class="rounded-full px-4 py-2 text-sm font-semibold transition-colors"
+          class="cursor-pointer rounded-md border-2 px-4 py-3 text-sm font-semibold transition-colors"
           :class="
             activeCategoryId === category.id
-              ? 'bg-white text-brand-ink'
-              : 'border border-white/15 text-white/70 hover:border-white/30 hover:text-white'
+              ? 'border-brand-ink bg-white text-brand-ink'
+              : 'border-white/40 text-white/70 hover:border-white hover:text-white'
           "
           @click="selectCategory(category.id)"
         >
@@ -46,9 +46,9 @@ function selectItem(index: number) {
       </div>
     </div>
 
-    <div class="grid gap-0 lg:grid-cols-[1.15fr_0.85fr]">
-      <div class="border-b border-white/10 p-4 sm:p-6 lg:border-r lg:border-b-0">
-        <div class="overflow-hidden rounded-3xl border border-white/10 bg-black">
+    <div class="grid grid-cols-1 gap-0 lg:grid-cols-[1.15fr_0.85fr]">
+      <div class="border-b-[3px] border-white p-4 sm:p-6 lg:border-r lg:border-b-0">
+        <div class="overflow-hidden rounded-md border-2 border-white bg-black">
           <MediaPreviewFacade
             :key="activeItem.wistiaId"
             :wistia-id="activeItem.wistiaId"
@@ -62,31 +62,31 @@ function selectItem(index: number) {
             <p class="text-xs font-semibold tracking-[0.24em] text-brand-cta uppercase">
               {{ activeCategory.eyebrow }}
             </p>
-            <h3 class="mt-2 text-2xl font-bold text-white sm:text-3xl">{{ activeItem.name }}</h3>
+            <h3 class="font-display mt-2 text-2xl font-bold text-white sm:text-3xl">{{ activeItem.name }}</h3>
             <p class="mt-3 max-w-xl text-sm leading-7 text-white/65">{{ activeItem.description }}</p>
           </div>
-          <span class="hidden rounded-full border border-white/15 px-3 py-1 text-xs font-semibold tracking-[0.2em] text-white/50 uppercase sm:inline">
+          <span class="hidden rounded-md border-2 border-white/40 px-3 py-1 text-xs font-semibold tracking-[0.2em] text-white/70 uppercase sm:inline">
             Live preview
           </span>
         </div>
       </div>
 
       <div class="p-4 sm:p-6">
-        <p class="text-xs font-semibold tracking-[0.24em] text-white/45 uppercase">Explore the lineup</p>
+        <p class="text-xs font-semibold tracking-[0.24em] text-white/55 uppercase">Explore the lineup</p>
         <div class="mt-4 space-y-2">
           <button
             v-for="(item, index) in activeCategory.items"
             :key="item.name"
             type="button"
-            class="flex w-full items-center gap-3 rounded-2xl border px-3 py-3 text-left transition-all"
+            class="flex w-full cursor-pointer items-center gap-3 rounded-md border-2 px-3 py-3 text-left transition-all"
             :class="
               activeItemIndex === index
-                ? 'border-brand-cta/40 bg-brand-cta/10'
-                : 'border-white/8 bg-white/4 hover:border-white/20 hover:bg-white/7'
+                ? 'border-brand-cta bg-brand-cta/15'
+                : 'border-white/20 bg-white/4 hover:border-white/50 hover:bg-white/7'
             "
             @click="selectItem(index)"
           >
-            <div class="h-14 w-24 shrink-0 overflow-hidden rounded-xl border border-white/10">
+            <div class="h-14 w-24 shrink-0 overflow-hidden rounded-md border-2 border-white/40">
               <MediaPreviewFacade
                 :wistia-id="item.wistiaId"
                 :label="item.name"
