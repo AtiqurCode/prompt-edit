@@ -34,12 +34,12 @@ export function wistiaEmbedUrl(wistiaId: string): string {
   return `https://fast.wistia.net/embed/iframe/${wistiaId}?seo=true&videoFoam=true`
 }
 
-/** Silent, looping, chrome-free embed used for the autoplay-on-scroll preview cards. */
-export function wistiaAutoplayUrl(wistiaId: string): string {
+/** Looping, chrome-free embed used for the autoplay-on-scroll preview cards. */
+export function wistiaAutoplayUrl(wistiaId: string, { muted = true }: { muted?: boolean } = {}): string {
   const params = new URLSearchParams({
     autoPlay: 'true',
-    muted: 'true',
-    silentAutoPlay: 'true',
+    muted: muted ? 'true' : 'false',
+    silentAutoPlay: muted ? 'true' : 'false',
     endVideoBehavior: 'loop',
     playButton: 'false',
     controlsVisibleOnLoad: 'false',

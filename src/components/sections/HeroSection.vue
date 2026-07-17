@@ -18,15 +18,16 @@ const heroPoints = [
         wistia-id="eu37od3pav"
         label="See PromptEdit in action"
         aspect="aspect-auto"
+        control-class="!bottom-auto !left-auto top-24 right-6 sm:top-28"
         class="h-full min-h-[100svh] w-full [&_img]:h-full [&_img]:min-h-[100svh] [&_img]:object-cover [&_iframe]:min-h-[100svh]"
       />
-      <div class="hero-veil absolute inset-0" />
-      <div class="noise-overlay" />
-      <div class="grid-signal absolute inset-0 opacity-60" />
+      <div class="hero-veil pointer-events-none absolute inset-0" />
+      <div class="noise-overlay pointer-events-none" />
+      <div class="grid-signal pointer-events-none absolute inset-0 opacity-60" />
     </div>
 
-    <div class="relative z-10 mx-auto flex min-h-[100svh] max-w-7xl flex-col justify-end px-6 pt-28 pb-14 sm:pb-20 lg:justify-center">
-      <div class="max-w-2xl">
+    <div class="pointer-events-none relative z-10 mx-auto flex min-h-[100svh] max-w-7xl flex-col justify-end px-6 pt-28 pb-14 sm:pb-20 lg:justify-center">
+      <div class="pointer-events-auto max-w-2xl">
         <ScrollReveal>
           <div class="mb-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 backdrop-blur-md">
             <span class="animate-signal h-2 w-2 rounded-full bg-brand-cta" />
@@ -86,7 +87,7 @@ const heroPoints = [
         </ScrollReveal>
       </div>
 
-      <ScrollReveal :delay="280" class="absolute top-[28%] right-6 hidden w-56 rotate-2 lg:block">
+      <ScrollReveal :delay="280" class="pointer-events-auto absolute top-[28%] right-6 hidden w-56 rotate-2 lg:block">
         <div class="animate-float rounded-2xl border border-white/15 bg-brand-ink/70 p-4 shadow-[0_20px_60px_rgba(0,0,0,0.45)] backdrop-blur-xl">
           <p class="eyebrow text-brand-yellow">Best student value</p>
           <p class="font-display mt-2 text-3xl font-bold text-white">
@@ -96,7 +97,7 @@ const heroPoints = [
         </div>
       </ScrollReveal>
 
-      <ScrollReveal :delay="500" class="mt-16 border-t border-white/10 pt-8">
+      <ScrollReveal :delay="500" class="pointer-events-auto mt-16 border-t border-white/10 pt-8">
         <ModelBadgeStrip />
       </ScrollReveal>
     </div>
