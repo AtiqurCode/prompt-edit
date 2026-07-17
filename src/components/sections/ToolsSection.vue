@@ -7,14 +7,13 @@ import ScrollReveal from '@/components/shared/ScrollReveal.vue'
 <template>
   <section id="tools" class="relative overflow-hidden bg-brand-ink py-20 sm:py-28">
     <div class="pointer-events-none absolute inset-0">
-      <div class="bg-grid-fade absolute inset-x-0 top-0 h-72 opacity-20" />
-      <div class="animate-blob-slow absolute bottom-0 right-0 h-96 w-96 rounded-full bg-brand-blue/15 blur-3xl" />
+      <div class="bg-grid-fade absolute inset-x-0 top-0 h-72 opacity-40" />
     </div>
 
     <div class="relative mx-auto max-w-7xl px-6">
       <ScrollReveal class="max-w-3xl">
         <p class="text-sm font-semibold tracking-[0.28em] text-brand-cta uppercase">What you can access</p>
-        <h2 class="mt-4 text-4xl font-extrabold tracking-tight text-white sm:text-5xl">
+        <h2 class="font-display mt-4 text-4xl font-bold text-white sm:text-5xl">
           Image, video, and audio tools — all in one creative studio.
         </h2>
         <p class="mt-5 max-w-2xl text-lg leading-8 text-white/65">

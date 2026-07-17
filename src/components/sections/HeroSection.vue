@@ -11,23 +11,21 @@ const heroPoints = [
 </script>
 
 <template>
-  <section id="top" class="editorial-hero film-grain relative overflow-hidden pt-14 pb-20 sm:pt-20 sm:pb-28">
+  <section id="top" class="relative overflow-hidden bg-brand-ink pt-14 pb-20 sm:pt-20 sm:pb-28">
     <div class="pointer-events-none absolute inset-0">
-      <div class="bg-grid-fade absolute inset-x-0 top-0 h-80 opacity-35" />
-      <div class="animate-blob absolute -top-24 -left-24 h-96 w-96 rounded-full bg-brand-cta/25 blur-3xl" />
-      <div class="animate-blob-slow absolute top-1/4 -right-24 h-112 w-md rounded-full bg-brand-blue/20 blur-3xl" />
+      <div class="bg-grid-fade absolute inset-x-0 top-0 h-80 opacity-60" />
     </div>
 
     <div class="relative mx-auto max-w-7xl px-6">
-      <div class="grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
+      <div class="grid grid-cols-1 items-center gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
         <div class="max-w-2xl">
           <p class="text-sm font-semibold tracking-[0.28em] text-brand-cta uppercase">
             For AI Creator Course students
           </p>
 
-          <h1 class="display-headline mt-6 font-extrabold text-white">
+          <h1 class="display-headline font-display mt-6 font-bold text-white">
             You bring the course.
-            <span class="bg-linear-to-r from-brand-cta via-brand-blue to-brand-blue-deep bg-clip-text text-transparent">
+            <span class="text-brand-cta">
               We bring the creative stack.
             </span>
           </h1>
@@ -46,7 +44,7 @@ const heroPoints = [
         </div>
 
         <div class="relative">
-          <div class="overflow-hidden rounded-4xl border border-white/12 bg-black shadow-2xl shadow-black/40">
+          <div class="shadow-brutal-invert-lg overflow-hidden rounded-lg border-[3px] border-white bg-black">
             <MediaPreviewFacade
               wistia-id="eu37od3pav"
               label="See PromptEdit in action"
@@ -55,22 +53,22 @@ const heroPoints = [
             />
           </div>
 
-          <div class="absolute -bottom-5 left-6 right-6 hidden rounded-3xl border border-white/12 bg-brand-ink/90 px-5 py-4 backdrop-blur sm:block">
+          <div class="shadow-brutal absolute -bottom-5 left-6 right-6 hidden -rotate-1 rounded-md border-[3px] border-brand-ink bg-brand-yellow px-5 py-4 sm:block">
             <div class="flex items-center justify-between gap-4">
               <div>
-                <p class="text-xs font-semibold tracking-[0.24em] text-white/50 uppercase">PromptEdit marketplace</p>
-                <p class="mt-1 text-sm text-white/75">Image, video, audio, and editing assets in one place</p>
+                <p class="text-xs font-semibold tracking-[0.24em] text-brand-ink/70 uppercase">PromptEdit marketplace</p>
+                <p class="mt-1 text-sm text-brand-ink">Image, video, audio, and editing assets in one place</p>
               </div>
               <div class="text-right">
-                <p class="text-2xl font-extrabold text-white">$39<span class="text-sm text-white/55">/mo</span></p>
-                <p class="text-xs text-brand-cta">Best student value</p>
+                <p class="font-display text-2xl font-bold text-brand-ink">$39<span class="text-sm text-brand-ink/70">/mo</span></p>
+                <p class="text-xs font-semibold text-brand-ink">Best student value</p>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="mt-20 border-t border-white/10 pt-10">
+      <div class="mt-20 border-t-2 border-white/20 pt-10">
         <ModelBadgeStrip />
       </div>
     </div>
