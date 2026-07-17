@@ -4,6 +4,7 @@ import { accentStyles } from '@/data/accentStyles'
 import MediaPreviewFacade from './MediaPreviewFacade.vue'
 import SiteButton from './SiteButton.vue'
 import ScrollReveal from './ScrollReveal.vue'
+import IconGlyph from './IconGlyph.vue'
 
 const { category, reverse = false } = defineProps<{
   category: AssetCategory
@@ -12,25 +13,25 @@ const { category, reverse = false } = defineProps<{
 </script>
 
 <template>
-  <article class="overflow-hidden rounded-4xl border border-black/8 bg-white shadow-xl shadow-brand-ink/6">
-    <div class="grid lg:grid-cols-2">
-      <ScrollReveal :class="reverse ? 'lg:order-2' : ''" class="border-b border-black/8 p-8 sm:p-10 lg:border-r lg:border-b-0">
+  <article class="shadow-brutal overflow-hidden rounded-lg border-[3px] border-brand-ink bg-white">
+    <div class="grid grid-cols-1 lg:grid-cols-2">
+      <ScrollReveal :class="reverse ? 'lg:order-2' : ''" class="border-b-[3px] border-brand-ink p-8 sm:p-10 lg:border-r lg:border-b-0">
         <span
-          class="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold"
+          class="inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm font-semibold"
           :class="accentStyles[category.accent].badge"
         >
-          <span aria-hidden="true">{{ category.emoji }}</span>
+          <IconGlyph :name="category.icon" class="h-4 w-4" />
           {{ category.stat }}
         </span>
 
-        <h3 class="mt-6 text-3xl font-extrabold tracking-tight text-brand-ink sm:text-4xl">
+        <h3 class="font-display mt-6 text-3xl font-bold text-brand-ink sm:text-4xl">
           {{ category.heading }}
         </h3>
-        <p class="mt-5 text-base leading-8 text-gray-600">{{ category.description }}</p>
+        <p class="mt-5 text-base leading-8 text-brand-slate">{{ category.description }}</p>
 
         <slot name="extra" />
 
-        <SiteButton href="#pricing" class="mt-8">
+        <SiteButton href="#pricing" surface="light" class="mt-8">
           Unlock the Templates Library
         </SiteButton>
       </ScrollReveal>
@@ -40,7 +41,7 @@ const { category, reverse = false } = defineProps<{
           class="absolute inset-0 opacity-30"
           :class="accentStyles[category.accent].glow"
         />
-        <div class="relative overflow-hidden rounded-3xl border border-white/10">
+        <div class="relative overflow-hidden rounded-md border-2 border-white">
           <MediaPreviewFacade
             v-if="category.demoWistiaId"
             :wistia-id="category.demoWistiaId"
@@ -50,7 +51,7 @@ const { category, reverse = false } = defineProps<{
           <img
             v-else
             :src="category.gridImage"
-            alt=""
+            :alt="category.gridImageAlt"
             loading="lazy"
             class="w-full object-cover"
           >
@@ -58,9 +59,9 @@ const { category, reverse = false } = defineProps<{
 
         <div
           v-if="category.secondaryImage"
-          class="relative mt-4 overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-3"
+          class="relative mt-4 overflow-hidden rounded-md border-2 border-white bg-transparent p-3"
         >
-          <img :src="category.secondaryImage" alt="" loading="lazy" class="w-full object-cover">
+          <img :src="category.secondaryImage" :alt="category.secondaryImageAlt" loading="lazy" class="w-full object-cover">
         </div>
       </ScrollReveal>
     </div>

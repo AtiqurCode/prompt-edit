@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { sfxDragAndDrop, sfxMuted, sfxWithSound, soundCategories } from '@/data/soundCategories'
 import MediaPreviewFacade from './MediaPreviewFacade.vue'
+import IconGlyph from './IconGlyph.vue'
 </script>
 
 <template>
@@ -8,30 +9,32 @@ import MediaPreviewFacade from './MediaPreviewFacade.vue'
     <div class="grid grid-cols-2 gap-3">
       <div>
         <MediaPreviewFacade :wistia-id="sfxMuted.wistiaId" :label="sfxMuted.label" aspect="aspect-4/3" />
-        <p class="mt-1.5 text-center text-xs font-semibold text-gray-400 uppercase">🔇 {{ sfxMuted.label }}</p>
+        <p class="mt-1.5 flex items-center justify-center gap-1.5 text-center text-xs font-semibold text-brand-slate uppercase">
+          <IconGlyph name="mute" class="h-3.5 w-3.5" /> {{ sfxMuted.label }}
+        </p>
       </div>
       <div>
         <MediaPreviewFacade :wistia-id="sfxWithSound.wistiaId" :label="sfxWithSound.label" aspect="aspect-4/3" />
-        <p class="mt-1.5 text-center text-xs font-semibold text-brand-cta uppercase">
-          🔊 {{ sfxWithSound.label }}
+        <p class="mt-1.5 flex items-center justify-center gap-1.5 text-center text-xs font-semibold text-brand-slate uppercase">
+          <IconGlyph name="unmute" class="h-3.5 w-3.5" /> {{ sfxWithSound.label }}
         </p>
       </div>
     </div>
 
     <div>
-      <p class="text-xs font-semibold tracking-widest text-gray-400 uppercase">
-        Click on a category to hear examples
+      <p class="text-xs font-semibold tracking-widest text-brand-slate uppercase">
+        Each category previews automatically as you scroll
       </p>
       <div class="mt-3 grid grid-cols-3 gap-3">
         <div v-for="sound in soundCategories" :key="sound.wistiaId">
           <MediaPreviewFacade :wistia-id="sound.wistiaId" :label="sound.name" aspect="aspect-square" />
-          <p class="mt-1 text-center text-xs font-medium text-gray-500">{{ sound.name }}</p>
+          <p class="mt-1 text-center text-xs font-medium text-brand-slate/75">{{ sound.name }}</p>
         </div>
       </div>
     </div>
 
     <div>
-      <p class="text-xs font-semibold tracking-widest text-gray-400 uppercase">
+      <p class="text-xs font-semibold tracking-widest text-brand-slate uppercase">
         Just drag, drop, and go
       </p>
       <MediaPreviewFacade
