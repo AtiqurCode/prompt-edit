@@ -2,11 +2,14 @@
 
 @theme {
   --font-sans:
-    'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    'Public Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-display:
+    'Lexend Mega', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 
   /* Pulled directly from the brand: prompt-edit.html's own stylesheet and the
      real logo file (public/Prompt_Edit_Logo_Black_Background.webp), not an
-     invented palette. */
+     invented palette. brand-ink doubles as the neubrutalist "black" for
+     borders/shadows/headline text. */
   --color-brand-ink: #000d22;
   --color-brand-ink-soft: #161e2a;
   --color-brand-cta: #27ae60;
@@ -14,7 +17,13 @@
   --color-brand-blue: #43aef6;
   --color-brand-blue-deep: #0072ef;
   --color-brand-slate: #2c3e50;
-  --color-brand-surface: #ecf0f1;
+  /* Warm "paper" background for the neubrutalist redesign, not the original
+     cool-gray surface tone. */
+  --color-brand-surface: #fdf6e9;
+  /* New flat pop accents for the neubrutalist redesign — same treatment as
+     brand-cta/brand-blue: solid fills, no gradients. */
+  --color-brand-yellow: #ffca3a;
+  --color-brand-coral: #ff5a5f;
 }
 
 body {
@@ -29,33 +38,12 @@ body {
   min-height: 100vh;
 }
 
-@utility animate-blob {
-  animation: blob-float 20s ease-in-out infinite;
-}
-
-@utility animate-blob-slow {
-  animation: blob-float 28s ease-in-out infinite reverse;
-}
-
 @utility animate-marquee {
   animation: marquee-scroll 32s linear infinite;
 }
 
 .marquee-track:hover {
   animation-play-state: paused;
-}
-
-@keyframes blob-float {
-  0%,
-  100% {
-    transform: translate(0, 0) scale(1);
-  }
-  33% {
-    transform: translate(5%, -6%) scale(1.1);
-  }
-  66% {
-    transform: translate(-4%, 5%) scale(0.94);
-  }
 }
 
 @keyframes marquee-scroll {
@@ -67,119 +55,100 @@ body {
   }
 }
 
-@utility animate-float {
-  animation: float-bob 6s ease-in-out infinite;
-}
-
-@utility animate-float-delayed {
-  animation: float-bob 7s ease-in-out infinite 1.2s;
-}
-
-@keyframes float-bob {
-  0%,
-  100% {
-    transform: translateY(0) rotate(var(--float-rotate, 0deg));
-  }
-  50% {
-    transform: translateY(-14px) rotate(var(--float-rotate, 0deg));
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .animate-blob,
-  .animate-blob-slow,
-  .animate-marquee,
-  .animate-float,
-  .animate-float-delayed {
+  .animate-marquee {
     animation: none;
   }
 }
 
-.perspective-distant {
-  perspective: 1200px;
-}
-
-.perspective-distant > * {
-  transform-style: preserve-3d;
-}
-
 .bg-grid-fade {
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+    linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
   background-size: 34px 34px;
   mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.9), transparent);
 }
 
-.surface-panel {
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.04));
-  box-shadow:
-    0 24px 80px rgba(0, 13, 34, 0.24),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(18px);
+.bg-grid-fade-dark {
+  background-image:
+    linear-gradient(rgba(0, 13, 34, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 13, 34, 0.08) 1px, transparent 1px);
+  background-size: 34px 34px;
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.9), transparent);
 }
 
-.surface-panel-light {
-  border: 1px solid rgba(0, 13, 34, 0.08);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.99), rgba(241, 243, 247, 0.94));
-  box-shadow:
-    0 18px 60px rgba(0, 13, 34, 0.07),
-    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+/* Radius scale — pick one, don't invent arbitrary values:
+   rounded-none = media/frame edges
+   rounded-md (6px) = default — buttons, cards, badges
+   rounded-lg (8px) = large hero panels only */
+
+/* Border rule: border-2 on small chips/badges, border-[3px] on cards/buttons/
+   inputs/primary containers, border-4 on the single largest hero visual.
+   border-brand-ink on light backgrounds, border-white on dark brand-ink
+   sections so the border stays visible. */
+
+/* Icon sizing: h-4 w-4 inline next to small/badge text; h-5 w-5 inside a
+   dedicated icon tile (e.g. h-11 w-11 circle), matching WhoItsForSection. */
+
+/* Neubrutalist hard-offset shadow system: flat color, zero blur, always
+   paired with .brutal-press on anything clickable for the hover-lift /
+   active-press tactile interaction. */
+.shadow-brutal-sm {
+  --brutal-shadow-color: var(--color-brand-ink);
+  box-shadow: 2px 2px 0 0 var(--brutal-shadow-color);
 }
 
-.cta-mesh {
-  background:
-    radial-gradient(circle at 14% 10%, rgba(255, 255, 255, 0.06), transparent 22%),
-    radial-gradient(circle at 82% 18%, rgba(255, 255, 255, 0.04), transparent 18%),
-    linear-gradient(180deg, #0c1420, #000d22 56%, #09111c 100%);
+.shadow-brutal {
+  --brutal-shadow-color: var(--color-brand-ink);
+  box-shadow: 4px 4px 0 0 var(--brutal-shadow-color);
 }
 
-.studio-shell {
-  background:
-    radial-gradient(circle at 0% 0%, rgba(255, 255, 255, 0.06), transparent 20%),
-    radial-gradient(circle at 100% 100%, rgba(255, 255, 255, 0.04), transparent 18%),
-    linear-gradient(180deg, #101824 0%, #000d22 100%);
+.shadow-brutal-lg {
+  --brutal-shadow-color: var(--color-brand-ink);
+  box-shadow: 8px 8px 0 0 var(--brutal-shadow-color);
 }
 
-.editorial-hero {
-  background:
-    radial-gradient(circle at 16% 18%, rgba(255, 255, 255, 0.06), transparent 22%),
-    radial-gradient(circle at 86% 12%, rgba(255, 255, 255, 0.04), transparent 18%),
-    linear-gradient(180deg, #07111d 0%, #000d22 52%, #09131f 100%);
+.shadow-brutal-invert {
+  --brutal-shadow-color: #ffffff;
+  box-shadow: 4px 4px 0 0 var(--brutal-shadow-color);
 }
 
-.film-grain {
-  position: relative;
+.shadow-brutal-invert-lg {
+  --brutal-shadow-color: #ffffff;
+  box-shadow: 8px 8px 0 0 var(--brutal-shadow-color);
 }
 
-.film-grain::after {
-  content: '';
-  pointer-events: none;
-  position: absolute;
-  inset: 0;
-  opacity: 0.18;
-  background-image: radial-gradient(rgba(255, 255, 255, 0.35) 0.6px, transparent 0.6px);
-  background-size: 3px 3px;
-  mix-blend-mode: soft-light;
+.shadow-brutal-cta {
+  --brutal-shadow-color: var(--color-brand-cta);
+  box-shadow: 4px 4px 0 0 var(--brutal-shadow-color);
+}
+
+.brutal-press {
+  transition:
+    transform 150ms ease,
+    box-shadow 150ms ease;
+}
+
+.brutal-press:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 0 var(--brutal-shadow-color);
+}
+
+.brutal-press:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 0 var(--brutal-shadow-color);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brutal-press {
+    transition: none;
+  }
 }
 
 .display-headline {
   font-size: clamp(2.75rem, 6vw, 5.5rem);
   line-height: 0.95;
-  letter-spacing: -0.04em;
-}
-
-.section-dark-muted {
-  background:
-    linear-gradient(180deg, #0f1824 0%, #0a1320 100%);
-}
-
-.section-light-muted {
-  background:
-    linear-gradient(180deg, #f5f7fa 0%, #edf1f5 100%);
+  letter-spacing: -0.01em;
 }
 
 .h-scroll-rail {
