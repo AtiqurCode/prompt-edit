@@ -40,3 +40,6 @@ __screenshots__/
 
 # Local reference export (Kajabi source dump)
 prompt-edit.html
+
+# Local agent skills / settings (installed via marketplace, not app source)
+.claude/
