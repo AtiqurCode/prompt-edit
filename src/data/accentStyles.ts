@@ -4,10 +4,8 @@ import type { AccentColor } from '@/types/content'
  * Full literal Tailwind class strings per accent, so the compiler's content
  * scan picks them up even though the accent key is chosen at runtime.
  *
- * Flat neubrutalist chips: solid brand-derived fill, black border, hard
- * offset shadow, no tints/gradients. Text color is black/brand-ink except on
- * brand-blue-deep, which is dark enough to need white text (verified via
- * computed WCAG ratios — brand-blue-deep only clears 4.5:1 with white text).
+ * Flat brand chips: solid fill, ink border, hard offset shadow.
+ * Text is ink on light accents; brand-blue-deep uses white (WCAG AA on deep blue).
  */
 export const accentStyles: Record<
   AccentColor,

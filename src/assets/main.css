@@ -1,37 +1,33 @@
 @import 'tailwindcss';
 
 @theme {
+  /* MASTER: Space Grotesk (display) + Archivo (body) — Creative Ops Deck */
   --font-sans:
-    'Public Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    'Archivo', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-display:
-    'Lexend Mega', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 
-  /* Pulled directly from the brand: prompt-edit.html's own stylesheet and the
-     real logo file (public/Prompt_Edit_Logo_Black_Background.webp), not an
-     invented palette. brand-ink doubles as the neubrutalist "black" for
-     borders/shadows/headline text. */
+  /* Brand-locked tokens from design-system/prompt-edit/MASTER.md */
   --color-brand-ink: #000d22;
-  --color-brand-ink-soft: #161e2a;
+  --color-brand-ink-soft: #121a27;
   --color-brand-cta: #27ae60;
   --color-brand-cta-hover: #2ecc71;
   --color-brand-blue: #43aef6;
-  --color-brand-blue-deep: #0072ef;
-  --color-brand-slate: #2c3e50;
-  /* Warm "paper" background for the neubrutalist redesign, not the original
-     cool-gray surface tone. */
-  --color-brand-surface: #fdf6e9;
-  /* New flat pop accents for the neubrutalist redesign — same treatment as
-     brand-cta/brand-blue: solid fills, no gradients. */
+  --color-brand-blue-deep: #0056c4;
+  --color-brand-slate: #334155;
+  --color-brand-surface: #f4f7fb;
   --color-brand-yellow: #ffca3a;
   --color-brand-coral: #ff5a5f;
 }
 
 body {
   font-family: var(--font-sans);
+  font-size: 16px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   background: var(--color-brand-ink);
+  color: #ffffff;
 }
 
 #app {
@@ -90,9 +86,8 @@ body {
 /* Icon sizing: h-4 w-4 inline next to small/badge text; h-5 w-5 inside a
    dedicated icon tile (e.g. h-11 w-11 circle), matching WhoItsForSection. */
 
-/* Neubrutalist hard-offset shadow system: flat color, zero blur, always
-   paired with .brutal-press on anything clickable for the hover-lift /
-   active-press tactile interaction. */
+/* Hard-offset shadow system: flat color, zero blur, always paired with
+   .brutal-press on clickable elements for hover-lift / active-press. */
 .shadow-brutal-sm {
   --brutal-shadow-color: var(--color-brand-ink);
   box-shadow: 2px 2px 0 0 var(--brutal-shadow-color);
@@ -148,7 +143,7 @@ body {
 .display-headline {
   font-size: clamp(2.75rem, 6vw, 5.5rem);
   line-height: 0.95;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.03em;
 }
 
 .h-scroll-rail {
@@ -166,4 +161,47 @@ body {
 .h-scroll-rail > * {
   scroll-snap-align: start;
   flex-shrink: 0;
+}
+
+/* Tools mosaic — reveal + live wave (transform/opacity only) */
+.mosaic-tile {
+  animation: mosaic-tile-in 420ms ease-out both;
+}
+
+.mosaic-tile-live {
+  outline: 2px solid var(--color-brand-cta);
+  outline-offset: -2px;
+  z-index: 1;
+}
+
+.mosaic-poster-drift {
+  animation: mosaic-poster-drift 12s ease-in-out infinite alternate;
+  transform-origin: center;
+}
+
+@keyframes mosaic-tile-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes mosaic-poster-drift {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.06);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mosaic-tile,
+  .mosaic-poster-drift {
+    animation: none;
+  }
 }
