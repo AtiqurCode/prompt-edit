@@ -1,106 +1,153 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { toolCategories } from '@/data/toolCategories'
 import MediaPreviewFacade from '@/components/shared/MediaPreviewFacade.vue'
 
-const activeCategoryId = ref(toolCategories[0]?.id ?? 'image')
-const activeItemIndex = ref(0)
+const LIVE_SLOTS = 6
+const WAVE_MS = 2600
 
-const activeCategory = computed(
-  () => toolCategories.find((category) => category.id === activeCategoryId.value) ?? toolCategories[0]!,
+const categoryChip: Record<string, string> = {
+  image: 'bg-brand-blue text-brand-ink',
+  video: 'bg-brand-cta text-brand-ink',
+  audio: 'bg-brand-yellow text-brand-ink',
+}
+
+const mosaicBands = computed(() => {
+  let index = 0
+  return toolCategories.map((category, categoryIndex) => ({
+    id: category.id,
+    eyebrow: category.eyebrow,
+    description: category.description,
+    categoryIndex,
+    items: category.items.map((item) => {
+      const globalIndex = index
+      index += 1
+      return { ...item, globalIndex }
+    }),
+  }))
+})
+
+const totalTools = computed(() =>
+  mosaicBands.value.reduce((sum, band) => sum + band.items.length, 0),
 )
-const activeItem = computed(() => activeCategory.value.items[activeItemIndex.value]!)
 
-function selectCategory(id: string) {
-  activeCategoryId.value = id
-  activeItemIndex.value = 0
+const waveOffset = ref(0)
+const reducedMotion = ref(false)
+let waveTimer: ReturnType<typeof setInterval> | null = null
+
+function isLive(globalIndex: number) {
+  if (reducedMotion.value) return false
+  const total = totalTools.value
+  if (total === 0) return false
+  for (let i = 0; i < Math.min(LIVE_SLOTS, total); i += 1) {
+    if ((waveOffset.value + i) % total === globalIndex) return true
+  }
+  return false
 }
 
-function selectItem(index: number) {
-  activeItemIndex.value = index
-}
+onMounted(() => {
+  reducedMotion.value = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  if (reducedMotion.value) return
+
+  waveTimer = setInterval(() => {
+    const total = totalTools.value
+    if (total === 0) return
+    waveOffset.value = (waveOffset.value + 1) % total
+  }, WAVE_MS)
+})
+
+onUnmounted(() => {
+  if (waveTimer) clearInterval(waveTimer)
+})
 </script>
 
 <template>
-  <div class="shadow-brutal-invert-lg overflow-hidden rounded-lg border-[3px] border-white bg-brand-ink-soft">
-    <div class="flex flex-wrap items-center justify-between gap-4 border-b-[3px] border-white px-5 py-4 sm:px-8">
+  <div
+    class="overflow-hidden rounded-lg border-[3px] border-white bg-brand-ink-soft shadow-brutal-invert-lg"
+    role="region"
+    aria-label="All creative tools mosaic"
+  >
+    <div
+      class="flex flex-wrap items-center justify-between gap-3 border-b-[3px] border-white bg-brand-ink px-5 py-4 sm:px-6"
+    >
       <div>
-        <p class="text-xs font-semibold tracking-[0.28em] text-brand-cta uppercase">Creative studio</p>
-        <p class="mt-1 text-sm text-white/55">Browse image, video, and audio tools in one flow</p>
+        <p class="text-xs font-semibold tracking-[0.28em] text-brand-cta uppercase">
+          Full lineup · live wall
+        </p>
+        <p class="mt-1 text-sm text-white/55">
+          {{ totalTools }} tools across image, video, and audio — all visible, auto-playing muted
+        </p>
       </div>
-      <div class="flex gap-2">
-        <button
+      <div class="flex flex-wrap gap-2" aria-hidden="true">
+        <span
           v-for="category in toolCategories"
           :key="category.id"
-          type="button"
-          class="cursor-pointer rounded-md border-2 px-4 py-3 text-sm font-semibold transition-colors"
-          :class="
-            activeCategoryId === category.id
-              ? 'border-brand-ink bg-white text-brand-ink'
-              : 'border-white/40 text-white/70 hover:border-white hover:text-white'
-          "
-          @click="selectCategory(category.id)"
+          class="rounded-md px-3 py-1.5 text-xs font-bold tracking-wide uppercase"
+          :class="categoryChip[category.id]"
         >
-          {{ category.eyebrow.replace('AI ', '') }}
-        </button>
+          {{ category.eyebrow.replace('AI ', '') }} · {{ category.items.length }}
+        </span>
       </div>
     </div>
 
-    <div class="grid grid-cols-1 gap-0 lg:grid-cols-[1.15fr_0.85fr]">
-      <div class="border-b-[3px] border-white p-4 sm:p-6 lg:border-r lg:border-b-0">
-        <div class="overflow-hidden rounded-md border-2 border-white bg-black">
-          <MediaPreviewFacade
-            :key="activeItem.wistiaId"
-            :wistia-id="activeItem.wistiaId"
-            :label="activeItem.name"
-            aspect="aspect-video"
-            class="min-h-[16rem] sm:min-h-[22rem]"
-          />
-        </div>
-        <div class="mt-5 flex items-start justify-between gap-4">
-          <div>
-            <p class="text-xs font-semibold tracking-[0.24em] text-brand-cta uppercase">
-              {{ activeCategory.eyebrow }}
-            </p>
-            <h3 class="font-display mt-2 text-2xl font-bold text-white sm:text-3xl">{{ activeItem.name }}</h3>
-            <p class="mt-3 max-w-xl text-sm leading-7 text-white/65">{{ activeItem.description }}</p>
+    <div class="space-y-0">
+      <section
+        v-for="band in mosaicBands"
+        :key="band.id"
+        class="border-b-[3px] border-white last:border-b-0"
+        :aria-label="band.eyebrow"
+      >
+        <div
+          class="flex flex-col gap-1 border-b-2 border-white/15 bg-brand-ink px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-5"
+        >
+          <div class="flex items-center gap-3">
+            <span
+              class="h-3 w-3 shrink-0 rounded-sm"
+              :class="categoryChip[band.id]"
+              aria-hidden="true"
+            />
+            <h3 class="font-display text-sm font-bold tracking-[0.18em] text-white uppercase">
+              {{ band.eyebrow }}
+            </h3>
           </div>
-          <span class="hidden rounded-md border-2 border-white/40 px-3 py-1 text-xs font-semibold tracking-[0.2em] text-white/70 uppercase sm:inline">
-            Live preview
-          </span>
+          <p class="text-xs text-white/50 sm:max-w-md sm:text-right">{{ band.description }}</p>
         </div>
-      </div>
 
-      <div class="p-4 sm:p-6">
-        <p class="text-xs font-semibold tracking-[0.24em] text-white/55 uppercase">Explore the lineup</p>
-        <div class="mt-4 space-y-2">
-          <button
-            v-for="(item, index) in activeCategory.items"
-            :key="item.name"
-            type="button"
-            class="flex w-full cursor-pointer items-center gap-3 rounded-md border-2 px-3 py-3 text-left transition-all"
-            :class="
-              activeItemIndex === index
-                ? 'border-brand-cta bg-brand-cta/15'
-                : 'border-white/20 bg-white/4 hover:border-white/50 hover:bg-white/7'
-            "
-            @click="selectItem(index)"
+        <div class="grid grid-cols-2 gap-px bg-white/20 sm:grid-cols-3">
+          <article
+            v-for="item in band.items"
+            :key="`${band.id}-${item.name}`"
+            class="mosaic-tile relative bg-brand-ink"
+            :class="isLive(item.globalIndex) ? 'mosaic-tile-live' : ''"
+            :style="{ animationDelay: `${(band.categoryIndex * 3 + item.globalIndex) * 35}ms` }"
           >
-            <div class="h-14 w-24 shrink-0 overflow-hidden rounded-md border-2 border-white/40">
-              <MediaPreviewFacade
-                :wistia-id="item.wistiaId"
-                :label="item.name"
-                aspect="aspect-video"
-                class="h-full w-full"
-              />
+            <MediaPreviewFacade
+              :wistia-id="item.wistiaId"
+              :label="item.name"
+              aspect="aspect-video"
+              lazy
+              :playing="isLive(item.globalIndex)"
+              class="rounded-none"
+            />
+
+            <div
+              class="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-brand-ink via-brand-ink/85 to-transparent px-3 pt-12 pb-3"
+            >
+              <p
+                class="inline-flex rounded border border-white/20 bg-brand-ink/80 px-1.5 py-0.5 text-[10px] font-semibold tracking-[0.16em] text-white/70 uppercase"
+              >
+                {{ band.eyebrow.replace('AI ', '') }}
+              </p>
+              <h4 class="font-display mt-1.5 text-sm font-bold text-white sm:text-base">
+                {{ item.name }}
+              </h4>
+              <p class="mt-0.5 line-clamp-2 text-[11px] leading-4 text-white/55 sm:text-xs sm:leading-5">
+                {{ item.description }}
+              </p>
             </div>
-            <div class="min-w-0">
-              <p class="truncate font-semibold text-white">{{ item.name }}</p>
-              <p class="mt-1 line-clamp-2 text-xs leading-5 text-white/55">{{ item.description }}</p>
-            </div>
-          </button>
+          </article>
         </div>
-      </div>
+      </section>
     </div>
   </div>
 </template>
