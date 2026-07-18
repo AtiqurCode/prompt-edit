@@ -27,7 +27,7 @@ import ScrollReveal from '@/components/shared/ScrollReveal.vue'
       </ScrollReveal>
 
       <ScrollReveal class="order-1 lg:order-2">
-        <p class="text-sm font-semibold tracking-[0.28em] text-brand-slate uppercase">AI editing plugins</p>
+        <p class="text-sm font-semibold tracking-[0.28em] text-brand-blue-deep uppercase">AI editing plugins</p>
         <h2 class="font-display mt-4 text-4xl font-bold text-brand-ink sm:text-5xl">
           Soundtrack where you edit.
         </h2>

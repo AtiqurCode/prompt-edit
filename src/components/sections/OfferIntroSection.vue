@@ -25,7 +25,7 @@ const pillars = [
     <div class="mx-auto max-w-7xl px-6">
       <div class="grid grid-cols-1 items-start gap-14 lg:grid-cols-[0.9fr_1.1fr]">
         <ScrollReveal>
-          <p class="text-sm font-semibold tracking-[0.28em] text-brand-slate uppercase">
+          <p class="text-sm font-semibold tracking-[0.28em] text-brand-blue-deep uppercase">
             Introducing Prompt Edit
           </p>
           <h2 class="font-display mt-4 max-w-xl text-4xl font-bold text-brand-ink sm:text-5xl">
