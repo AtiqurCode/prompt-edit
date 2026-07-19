@@ -20,7 +20,7 @@ defineProps<{
       {{ chapter }}
     </span>
     <p
-      class="text-sm font-semibold tracking-[0.28em] uppercase"
+      class="text-[11px] font-semibold tracking-[0.22em] uppercase sm:text-sm sm:tracking-[0.28em]"
       :class="tone === 'dark' ? 'text-brand-cta' : 'text-brand-blue-deep'"
     >
       {{ label }}

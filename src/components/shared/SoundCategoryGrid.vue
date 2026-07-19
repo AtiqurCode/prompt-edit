@@ -35,8 +35,12 @@ import IconGlyph from './IconGlyph.vue'
       <p class="text-xs font-semibold tracking-widest text-brand-slate uppercase">
         Each category previews as you scroll — tap any tile for sound
       </p>
-      <div class="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
-        <div v-for="sound in soundCategories" :key="sound.wistiaId">
+      <div class="mt-3 flex gap-3 overflow-x-auto pb-1 [scrollbar-width:thin] snap-x snap-mandatory sm:grid sm:grid-cols-3 sm:overflow-visible sm:pb-0">
+        <div
+          v-for="sound in soundCategories"
+          :key="sound.wistiaId"
+          class="w-[42vw] max-w-[9.5rem] shrink-0 snap-start sm:w-auto sm:max-w-none"
+        >
           <MediaPreviewFacade
             :wistia-id="sound.wistiaId"
             :label="sound.name"

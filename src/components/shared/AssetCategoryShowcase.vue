@@ -13,37 +13,37 @@ const { category, reverse = false } = defineProps<{
 </script>
 
 <template>
-  <article class="overflow-hidden rounded-2xl border border-brand-ink/10 bg-white shadow-[0_20px_50px_rgba(0,13,34,0.06)]">
+  <article class="overflow-hidden rounded-lg border-[3px] border-brand-ink bg-white shadow-brutal">
     <div class="grid grid-cols-1 lg:grid-cols-2">
       <ScrollReveal
         :class="reverse ? 'lg:order-2' : ''"
-        class="border-b border-brand-ink/8 p-8 sm:p-10 lg:border-r lg:border-b-0"
+        class="border-b-[3px] border-brand-ink p-5 sm:p-10 lg:border-r lg:border-b-0"
       >
         <span
-          class="inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-sm font-semibold"
+          class="inline-flex items-center gap-2 rounded-md border-2 border-brand-ink px-3 py-1.5 text-xs font-semibold sm:text-sm"
           :class="accentStyles[category.accent].badge"
         >
           <IconGlyph :name="category.icon" class="h-4 w-4" />
           {{ category.stat }}
         </span>
 
-        <h3 class="font-display mt-6 text-3xl font-bold tracking-tight text-brand-ink sm:text-4xl">
+        <h3 class="font-display mt-4 text-2xl font-bold tracking-tight text-brand-ink sm:mt-6 sm:text-4xl">
           {{ category.heading }}
         </h3>
-        <p class="mt-5 text-base leading-relaxed text-brand-slate">{{ category.description }}</p>
+        <p class="mt-3 text-sm leading-6 text-brand-slate sm:mt-5 sm:text-base sm:leading-relaxed">{{ category.description }}</p>
 
         <slot name="extra" />
 
-        <SiteButton href="#pricing" class="mt-8">Unlock the Templates Library</SiteButton>
+        <SiteButton href="#pricing" surface="light" class="mt-6 sm:mt-8">Unlock Templates</SiteButton>
       </ScrollReveal>
 
       <ScrollReveal
         :delay="100"
         :class="reverse ? 'lg:order-1' : ''"
-        class="relative bg-brand-ink p-4 sm:p-6"
+        class="relative bg-brand-ink p-3 sm:p-6"
       >
         <div class="absolute inset-0 opacity-40" :class="accentStyles[category.accent].glow" />
-        <div class="relative overflow-hidden rounded-xl border border-white/12">
+        <div class="relative overflow-hidden rounded-md border-2 border-white/20">
           <MediaPreviewFacade
             v-if="category.demoWistiaId"
             :wistia-id="category.demoWistiaId"
@@ -67,7 +67,7 @@ const { category, reverse = false } = defineProps<{
 
         <div
           v-if="category.secondaryImage"
-          class="relative mt-4 overflow-hidden rounded-xl border border-white/12 p-3"
+          class="relative mt-3 overflow-hidden rounded-md border-2 border-white/20 p-2 sm:mt-4 sm:p-3"
         >
           <img
             :src="category.secondaryImage"

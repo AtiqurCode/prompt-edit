@@ -29,7 +29,7 @@ const sectionInView = ref(false)
 const pageVisible = ref(true)
 const reducedMotion = usePrefersReducedMotion()
 
-/** Once the wall is on screen, every tile runs muted — no rotating slot wave. */
+/** Once the wall is on screen, every tile runs muted. */
 const demosLive = computed(
   () => !reducedMotion.value && sectionInView.value && pageVisible.value,
 )
@@ -62,22 +62,22 @@ onUnmounted(() => {
 <template>
   <div
     ref="rootEl"
-    class="overflow-hidden rounded-lg border-[3px] border-white bg-brand-ink-soft shadow-brutal-invert-lg"
+    class="overflow-hidden rounded-lg border-[3px] border-white bg-brand-ink-soft shadow-brutal-invert sm:shadow-brutal-invert-lg"
     role="region"
     aria-label="All creative tools mosaic"
   >
     <div
-      class="flex flex-wrap items-center justify-between gap-3 border-b-[3px] border-white bg-brand-ink px-5 py-4 sm:px-6"
+      class="flex flex-col gap-3 border-b-[3px] border-white bg-brand-ink px-4 py-4 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:px-6"
     >
       <div>
-        <p class="text-xs font-semibold tracking-[0.28em] text-brand-cta uppercase">
+        <p class="text-[11px] font-semibold tracking-[0.24em] text-brand-cta uppercase sm:text-xs sm:tracking-[0.28em]">
           Full lineup · live wall
         </p>
-        <p class="mt-1 text-sm text-white/55">
-          {{ totalTools }} tools across image, video, and audio — tap any tile for sound
+        <p class="mt-1 text-sm leading-6 text-white/55">
+          {{ totalTools }} tools — swipe on mobile, tap any tile for sound
         </p>
       </div>
-      <div class="flex flex-wrap gap-2" aria-hidden="true">
+      <div class="hidden flex-wrap gap-2 sm:flex" aria-hidden="true">
         <span
           v-for="category in toolCategories"
           :key="category.id"
@@ -109,15 +109,19 @@ onUnmounted(() => {
               {{ band.eyebrow }}
             </h3>
           </div>
-          <p class="text-xs text-white/50 sm:max-w-md sm:text-right">{{ band.description }}</p>
+          <p class="hidden text-xs text-white/50 sm:block sm:max-w-md sm:text-right">
+            {{ band.description }}
+          </p>
         </div>
 
-        <div class="grid grid-cols-1 gap-px bg-white/20 min-[400px]:grid-cols-2 lg:grid-cols-3">
+        <!-- Mobile: horizontal snap rail. Desktop: dense mosaic grid. -->
+        <div
+          class="flex gap-3 overflow-x-auto bg-brand-ink px-4 py-4 [scrollbar-width:thin] snap-x snap-mandatory sm:grid sm:grid-cols-2 sm:gap-px sm:overflow-visible sm:bg-white/20 sm:p-0 lg:grid-cols-3"
+        >
           <article
             v-for="(item, itemIndex) in band.items"
             :key="`${band.id}-${item.name}`"
-            class="mosaic-tile relative bg-brand-ink"
-            :class="demosLive ? 'mosaic-tile-live' : ''"
+            class="mosaic-tile relative w-[78vw] max-w-[18rem] shrink-0 snap-center overflow-hidden rounded-md border-2 border-white/25 sm:w-auto sm:max-w-none sm:rounded-none sm:border-0 sm:bg-brand-ink"
             :style="{ animationDelay: `${(band.categoryIndex * 3 + itemIndex) * 35}ms` }"
           >
             <MediaPreviewFacade
@@ -127,21 +131,21 @@ onUnmounted(() => {
               lazy
               poster-size="sm"
               :playing="demosLive"
-              class="rounded-none"
+              class="rounded-md sm:rounded-none"
             />
 
             <div
-              class="pointer-events-none absolute inset-x-0 bottom-0 z-[5] bg-gradient-to-t from-brand-ink via-brand-ink/85 to-transparent px-3 pt-10 pb-9"
+              class="pointer-events-none absolute inset-x-0 bottom-0 z-[5] bg-gradient-to-t from-brand-ink via-brand-ink/85 to-transparent px-3 pt-8 pb-8 sm:pt-10 sm:pb-9"
             >
               <p
-                class="inline-flex rounded border border-white/20 bg-brand-ink/80 px-1.5 py-0.5 text-xs font-semibold tracking-[0.16em] text-white/70 uppercase"
+                class="hidden rounded border border-white/20 bg-brand-ink/80 px-1.5 py-0.5 text-xs font-semibold tracking-[0.16em] text-white/70 uppercase sm:inline-flex"
               >
                 {{ band.eyebrow.replace('AI ', '') }}
               </p>
-              <h4 class="font-display mt-1.5 text-sm font-bold text-white sm:text-base">
+              <h4 class="font-display text-sm font-bold text-white sm:mt-1.5 sm:text-base">
                 {{ item.name }}
               </h4>
-              <p class="mt-0.5 line-clamp-2 text-xs leading-5 text-white/55">
+              <p class="mt-0.5 hidden text-xs leading-5 text-white/55 sm:line-clamp-2 sm:block">
                 {{ item.description }}
               </p>
             </div>

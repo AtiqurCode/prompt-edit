@@ -87,11 +87,11 @@ function onToggleSound(event: Event) {
       @click="onToggleSound"
     >
       <span
-        class="absolute right-1.5 bottom-1.5 flex h-7 w-7 items-center justify-center rounded-full bg-black/40 text-white/75"
-        :class="soundOn ? 'bg-black/55 text-white' : ''"
+        class="absolute right-1 bottom-1 flex h-9 w-9 items-center justify-center rounded-full bg-black/45 text-white/80 sm:right-1.5 sm:bottom-1.5 sm:h-7 sm:w-7 sm:bg-black/40 sm:text-white/75"
+        :class="soundOn ? 'bg-black/60 text-white sm:bg-black/55' : ''"
         aria-hidden="true"
       >
-        <IconGlyph :name="soundOn ? 'unmute' : 'mute'" class="h-3.5 w-3.5" />
+        <IconGlyph :name="soundOn ? 'unmute' : 'mute'" class="h-4 w-4 sm:h-3.5 sm:w-3.5" />
       </span>
     </button>
   </div>

@@ -28,14 +28,17 @@ body {
   text-rendering: optimizeLegibility;
   background: var(--color-brand-ink);
   color: #ffffff;
+  overflow-x: clip;
 }
 
 html {
   scroll-padding-top: var(--site-header-offset, 5.5rem);
+  overflow-x: clip;
 }
 
 #app {
   min-height: 100vh;
+  overflow-x: clip;
 }
 
 #tools,
@@ -159,9 +162,48 @@ html {
 }
 
 .display-headline {
-  font-size: clamp(2.75rem, 6vw, 5.5rem);
-  line-height: 0.95;
+  font-size: clamp(2.125rem, 7.2vw, 5.5rem);
+  line-height: 1.05;
   letter-spacing: -0.03em;
+}
+
+/* Mobile: softer offsets so brutal shadows don't blow past the viewport. */
+@media (max-width: 639px) {
+  .shadow-brutal,
+  .shadow-brutal-invert,
+  .shadow-brutal-cta {
+    box-shadow: 3px 3px 0 0 var(--brutal-shadow-color);
+  }
+
+  .shadow-brutal-lg,
+  .shadow-brutal-invert-lg {
+    box-shadow: 4px 4px 0 0 var(--brutal-shadow-color);
+  }
+
+  .brutal-press:hover {
+    transform: none;
+    box-shadow: 3px 3px 0 0 var(--brutal-shadow-color);
+  }
+
+  .brutal-press:active {
+    transform: translate(1px, 1px);
+    box-shadow: 1px 1px 0 0 var(--brutal-shadow-color);
+  }
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 5.5vw, 3rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.eyebrow {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
 }
 
 .h-scroll-rail {

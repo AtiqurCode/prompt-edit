@@ -16,23 +16,23 @@ const legalLinks = [
 
 <template>
   <footer class="border-t-[3px] border-brand-cta bg-brand-ink text-white/50">
-    <div class="mx-auto max-w-7xl px-6 py-16">
-      <div class="grid grid-cols-1 gap-12 border-b-2 border-white/15 pb-12 lg:grid-cols-[1.2fr_0.8fr_0.8fr]">
+    <div class="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16">
+      <div class="grid grid-cols-1 gap-8 border-b-2 border-white/15 pb-10 sm:gap-12 sm:pb-12 lg:grid-cols-[1.2fr_0.8fr_0.8fr]">
         <div>
           <div class="flex items-center gap-3">
-            <img :src="images.logo" alt="PromptEdit" class="h-8 w-auto opacity-95">
+            <img :src="images.logo" alt="PromptEdit" class="h-7 w-auto opacity-95 sm:h-8">
             <span
               class="rounded border border-brand-cta/50 px-2 py-0.5 text-xs font-semibold tracking-[0.22em] text-brand-cta uppercase"
             >
               Studio
             </span>
           </div>
-          <p class="mt-5 max-w-sm text-sm leading-7 text-white/60">
+          <p class="mt-4 max-w-sm text-sm leading-6 text-white/60 sm:mt-5 sm:leading-7">
             The AI marketplace and templates library for creators who want one workflow, not ten.
           </p>
           <a
             href="mailto:support@contentcreator.com"
-            class="mt-6 inline-flex cursor-pointer items-center gap-2 text-sm font-semibold text-white transition-colors duration-200 hover:text-brand-cta focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            class="mt-5 inline-flex min-h-11 cursor-pointer items-center gap-2 text-sm font-semibold text-white transition-colors duration-200 hover:text-brand-cta focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:mt-6"
           >
             support@contentcreator.com
             <svg
@@ -48,36 +48,38 @@ const legalLinks = [
           </a>
         </div>
 
-        <div>
-          <p class="text-xs font-semibold tracking-[0.28em] text-white/50 uppercase">Navigate</p>
-          <nav class="mt-4 flex flex-col gap-3" aria-label="Footer navigation">
-            <a
-              v-for="link in navLinks"
-              :key="link.href"
-              :href="link.href"
-              class="cursor-pointer text-sm font-semibold text-white/70 transition-colors duration-200 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-            >
-              {{ link.label }}
-            </a>
-          </nav>
-        </div>
+        <div class="grid grid-cols-2 gap-8 sm:contents">
+          <div>
+            <p class="text-[11px] font-semibold tracking-[0.24em] text-white/50 uppercase sm:text-xs sm:tracking-[0.28em]">Navigate</p>
+            <nav class="mt-3 flex flex-col gap-2.5 sm:mt-4 sm:gap-3" aria-label="Footer navigation">
+              <a
+                v-for="link in navLinks"
+                :key="link.href"
+                :href="link.href"
+                class="cursor-pointer py-0.5 text-sm font-semibold text-white/70 transition-colors duration-200 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+              >
+                {{ link.label }}
+              </a>
+            </nav>
+          </div>
 
-        <div>
-          <p class="text-xs font-semibold tracking-[0.28em] text-white/50 uppercase">Legal</p>
-          <nav class="mt-4 flex flex-col gap-3" aria-label="Legal links">
-            <a
-              v-for="link in legalLinks"
-              :key="link.label"
-              :href="link.href"
-              class="cursor-pointer text-sm font-semibold text-white/70 underline decoration-transparent decoration-2 underline-offset-4 transition-colors duration-200 hover:text-white hover:decoration-brand-cta focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-            >
-              {{ link.label }}
-            </a>
-          </nav>
+          <div>
+            <p class="text-[11px] font-semibold tracking-[0.24em] text-white/50 uppercase sm:text-xs sm:tracking-[0.28em]">Legal</p>
+            <nav class="mt-3 flex flex-col gap-2.5 sm:mt-4 sm:gap-3" aria-label="Legal links">
+              <a
+                v-for="link in legalLinks"
+                :key="link.label"
+                :href="link.href"
+                class="cursor-pointer py-0.5 text-sm font-semibold text-white/70 underline decoration-transparent decoration-2 underline-offset-4 transition-colors duration-200 hover:text-white hover:decoration-brand-cta focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+              >
+                {{ link.label }}
+              </a>
+            </nav>
+          </div>
         </div>
       </div>
 
-      <div class="mt-10 space-y-4 text-xs leading-relaxed text-white/50">
+      <div class="mt-8 space-y-3 text-[11px] leading-relaxed text-white/50 sm:mt-10 sm:space-y-4 sm:text-xs">
         <p>
           &copy; {{ new Date().getFullYear() }} Paul Xavier International LLC. By visiting this page,
           you agree to the terms, policies, and disclaimers linked above.
