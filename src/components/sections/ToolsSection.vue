@@ -2,6 +2,7 @@
 import CreativeStudioExplorer from '@/components/shared/CreativeStudioExplorer.vue'
 import SiteButton from '@/components/shared/SiteButton.vue'
 import ScrollReveal from '@/components/shared/ScrollReveal.vue'
+import SectionEyebrow from '@/components/shared/SectionEyebrow.vue'
 </script>
 
 <template>
@@ -12,22 +13,13 @@ import ScrollReveal from '@/components/shared/ScrollReveal.vue'
 
     <div class="relative mx-auto max-w-7xl px-6">
       <ScrollReveal class="max-w-3xl">
-        <div class="flex items-center gap-3">
-          <span
-            class="inline-flex h-8 w-8 items-center justify-center rounded-md border-2 border-brand-cta font-display text-xs font-bold text-brand-cta"
-          >
-            02
-          </span>
-          <p class="text-sm font-semibold tracking-[0.28em] text-brand-cta uppercase">
-            What you can access
-          </p>
-        </div>
+        <SectionEyebrow label="What you can access" chapter="02" tone="dark" />
         <h2 class="font-display mt-5 text-4xl font-bold text-white sm:text-5xl">
           Image, video, and audio tools — all in one creative studio.
         </h2>
         <p class="mt-5 max-w-2xl text-lg leading-8 text-white/65">
-          One wall. Every topic. Muted demos cycle across the mosaic so you can scan the full
-          marketplace without clicking through tabs.
+          One wall. Every topic. Muted demos cycle across the mosaic — tap any tile for sound. Only
+          one video plays audio at a time.
         </p>
       </ScrollReveal>
 

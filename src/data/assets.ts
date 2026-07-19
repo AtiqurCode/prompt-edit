@@ -25,21 +25,23 @@ export const images = {
   satisfactionGuarantee: `${KAJABI}/themes/2147904907/settings_images/wQYLmC5ETUStuMB0TZ5X_eLWaGR9tRXaCrbFrZLsu_Satisfaction_Guarantee.png`,
 }
 
+type PosterSize = 'sm' | 'md'
+
 /** Real still frame for a Wistia media id, resolved via oEmbed ahead of time. */
-export function wistiaPoster(wistiaId: string): string {
-  return wistiaThumbnails[wistiaId] ?? `https://fast.wistia.com/embed/medias/${wistiaId}/swatch`
+export function wistiaPoster(wistiaId: string, size: PosterSize = 'md'): string {
+  const base =
+    wistiaThumbnails[wistiaId] ?? `https://fast.wistia.com/embed/medias/${wistiaId}/swatch`
+  if (size === 'sm' && base.includes('image_crop_resized=')) {
+    return base.replace(/image_crop_resized=\d+x\d+/, 'image_crop_resized=480x270')
+  }
+  return base
 }
 
-export function wistiaEmbedUrl(wistiaId: string): string {
-  return `https://fast.wistia.net/embed/iframe/${wistiaId}?seo=true&videoFoam=true`
-}
-
-/** Silent, looping, chrome-free embed used for the autoplay-on-scroll preview cards. */
-export function wistiaAutoplayUrl(wistiaId: string): string {
-  const params = new URLSearchParams({
+function wistiaPreviewParams(withSound: boolean) {
+  return new URLSearchParams({
     autoPlay: 'true',
-    muted: 'true',
-    silentAutoPlay: 'true',
+    muted: withSound ? 'false' : 'true',
+    ...(withSound ? {} : { silentAutoPlay: 'true' }),
     endVideoBehavior: 'loop',
     playButton: 'false',
     controlsVisibleOnLoad: 'false',
@@ -50,5 +52,14 @@ export function wistiaAutoplayUrl(wistiaId: string): string {
     volumeControl: 'false',
     smallPlayButton: 'false',
   })
-  return `https://fast.wistia.net/embed/iframe/${wistiaId}?${params.toString()}`
+}
+
+/** Silent, looping, chrome-free embed used for autoplay-on-scroll previews. */
+export function wistiaAutoplayUrl(wistiaId: string): string {
+  return `https://fast.wistia.net/embed/iframe/${wistiaId}?${wistiaPreviewParams(false).toString()}`
+}
+
+/** Same chrome-free loop, but with sound — only after a user gesture. */
+export function wistiaSoundUrl(wistiaId: string): string {
+  return `https://fast.wistia.net/embed/iframe/${wistiaId}?${wistiaPreviewParams(true).toString()}`
 }

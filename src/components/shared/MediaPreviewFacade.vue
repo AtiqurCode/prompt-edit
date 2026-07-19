@@ -1,58 +1,93 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { wistiaAutoplayUrl, wistiaPoster } from '@/data/assets'
+import { wistiaAutoplayUrl, wistiaPoster, wistiaSoundUrl } from '@/data/assets'
 import { useAutoplayInView } from '@/composables/useAutoplayInView'
+import { useExclusiveUnmute } from '@/composables/useExclusiveUnmute'
+import IconGlyph from '@/components/shared/IconGlyph.vue'
 
-const {
-  wistiaId,
-  label = 'preview',
-  aspect = 'aspect-video',
-  playing = undefined,
-  lazy = false,
-} = defineProps<{
-  wistiaId: string
-  label?: string
-  aspect?: string
-  /** When set, parent controls playback (mosaic wave). Otherwise: in-view autoplay. */
-  playing?: boolean
-  lazy?: boolean
-}>()
+const props = withDefaults(
+  defineProps<{
+    wistiaId: string
+    label?: string
+    aspect?: string
+    /** When set, parent controls muted autoplay (mosaic wave). Unmute still forces live. */
+    playing?: boolean
+    lazy?: boolean
+    posterSize?: 'sm' | 'md'
+  }>(),
+  {
+    label: 'preview',
+    aspect: 'aspect-video',
+    lazy: false,
+    posterSize: 'md',
+  },
+)
 
 const el = ref<HTMLElement | null>(null)
-const inViewActive = useAutoplayInView(el)
+const unmuteEnabled = ref(true)
+const { soundOn, toggle } = useExclusiveUnmute(unmuteEnabled)
 
-const active = computed(() => (playing === undefined ? inViewActive.value : playing))
+const autoplayEnabled = computed(() => props.playing === undefined && !soundOn.value)
+const inViewActive = useAutoplayInView(el, { enabled: autoplayEnabled })
+
+const active = computed(() => {
+  if (soundOn.value) return true
+  if (props.playing === undefined) return inViewActive.value
+  return props.playing
+})
+
+const embedSrc = computed(() =>
+  soundOn.value ? wistiaSoundUrl(props.wistiaId) : wistiaAutoplayUrl(props.wistiaId),
+)
+
+const posterSrc = computed(() => wistiaPoster(props.wistiaId, props.posterSize))
+
+function onToggleSound(event: Event) {
+  event.preventDefault()
+  event.stopPropagation()
+  toggle()
+}
 </script>
 
 <template>
   <div ref="el" class="relative overflow-hidden rounded-md bg-brand-ink" :class="aspect">
     <img
-      :src="wistiaPoster(wistiaId)"
-      alt=""
+      :src="posterSrc"
+      :alt="active ? '' : label"
       class="absolute inset-0 h-full w-full object-cover"
-      :class="active ? '' : 'mosaic-poster-drift'"
+      :class="active || soundOn ? '' : 'mosaic-poster-drift'"
       :loading="lazy ? 'lazy' : 'eager'"
       decoding="async"
+      width="960"
+      height="540"
     >
+
     <iframe
       v-if="active"
-      :src="wistiaAutoplayUrl(wistiaId)"
+      :key="`${wistiaId}-${soundOn ? 'sound' : 'mute'}`"
+      :src="embedSrc"
       :title="label"
-      class="absolute inset-0 h-full w-full"
+      class="pointer-events-none absolute inset-0 h-full w-full"
       frameborder="0"
       allow="autoplay"
+      loading="lazy"
     />
-    <span
-      class="pointer-events-none absolute right-2 bottom-2 flex items-center gap-1 rounded-md border-2 border-white bg-brand-ink px-2 py-1 text-[10px] font-medium text-white transition-opacity duration-200"
-      :class="active ? 'opacity-100' : 'opacity-0'"
+
+    <!-- Full-tile hit target; indicator stays small -->
+    <button
+      type="button"
+      class="absolute inset-0 z-10 cursor-pointer touch-manipulation focus-visible:outline-none"
+      :aria-label="soundOn ? `Mute ${label}` : `Unmute ${label}`"
+      :aria-pressed="soundOn"
+      @click="onToggleSound"
     >
-      <svg viewBox="0 0 20 20" class="h-3 w-3 fill-current" aria-hidden="true">
-        <path
-          d="M10 3.5 5.5 7H3a1 1 0 00-1 1v4a1 1 0 001 1h2.5L10 16.5V3.5z"
-        />
-        <path d="M13 7.5l4 4M17 7.5l-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" />
-      </svg>
-      muted
-    </span>
+      <span
+        class="absolute right-1.5 bottom-1.5 flex h-7 w-7 items-center justify-center rounded-full bg-black/40 text-white/75"
+        :class="soundOn ? 'bg-black/55 text-white' : ''"
+        aria-hidden="true"
+      >
+        <IconGlyph :name="soundOn ? 'unmute' : 'mute'" class="h-3.5 w-3.5" />
+      </span>
+    </button>
   </div>
 </template>

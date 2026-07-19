@@ -2,11 +2,12 @@
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { toolCategories } from '@/data/toolCategories'
 import MediaPreviewFacade from '@/components/shared/MediaPreviewFacade.vue'
+import { usePrefersReducedMotion } from '@/composables/usePrefersReducedMotion'
 
-const LIVE_SLOTS = 6
-const WAVE_MS = 2600
+const LIVE_SLOTS = 2
+const WAVE_MS = 3200
 
-const categoryChip: Record<string, string> = {
+const categoryChip: Record<'image' | 'video' | 'audio', string> = {
   image: 'bg-brand-blue text-brand-ink',
   video: 'bg-brand-cta text-brand-ink',
   audio: 'bg-brand-yellow text-brand-ink',
@@ -15,7 +16,7 @@ const categoryChip: Record<string, string> = {
 const mosaicBands = computed(() => {
   let index = 0
   return toolCategories.map((category, categoryIndex) => ({
-    id: category.id,
+    id: category.id as 'image' | 'video' | 'audio',
     eyebrow: category.eyebrow,
     description: category.description,
     categoryIndex,
@@ -31,38 +32,73 @@ const totalTools = computed(() =>
   mosaicBands.value.reduce((sum, band) => sum + band.items.length, 0),
 )
 
+const rootEl = ref<HTMLElement | null>(null)
+const sectionInView = ref(false)
+const pageVisible = ref(true)
 const waveOffset = ref(0)
-const reducedMotion = ref(false)
+const reducedMotion = usePrefersReducedMotion()
+
 let waveTimer: ReturnType<typeof setInterval> | null = null
+let sectionObserver: IntersectionObserver | null = null
 
 function isLive(globalIndex: number) {
-  if (reducedMotion.value) return false
+  if (reducedMotion.value || !sectionInView.value || !pageVisible.value) return false
   const total = totalTools.value
   if (total === 0) return false
-  for (let i = 0; i < Math.min(LIVE_SLOTS, total); i += 1) {
+  const slots = Math.min(LIVE_SLOTS, total)
+  for (let i = 0; i < slots; i += 1) {
     if ((waveOffset.value + i) % total === globalIndex) return true
   }
   return false
 }
 
-onMounted(() => {
-  reducedMotion.value = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  if (reducedMotion.value) return
+function clearWave() {
+  if (waveTimer) {
+    clearInterval(waveTimer)
+    waveTimer = null
+  }
+}
+
+function syncWave() {
+  clearWave()
+  if (reducedMotion.value || !sectionInView.value || !pageVisible.value) return
 
   waveTimer = setInterval(() => {
     const total = totalTools.value
     if (total === 0) return
     waveOffset.value = (waveOffset.value + 1) % total
   }, WAVE_MS)
+}
+
+function onVisibility() {
+  pageVisible.value = document.visibilityState === 'visible'
+  syncWave()
+}
+
+onMounted(() => {
+  document.addEventListener('visibilitychange', onVisibility)
+
+  if (!rootEl.value) return
+  sectionObserver = new IntersectionObserver(
+    (entries) => {
+      sectionInView.value = entries[0]?.isIntersecting ?? false
+      syncWave()
+    },
+    { threshold: 0.12, rootMargin: '0px' },
+  )
+  sectionObserver.observe(rootEl.value)
 })
 
 onUnmounted(() => {
-  if (waveTimer) clearInterval(waveTimer)
+  document.removeEventListener('visibilitychange', onVisibility)
+  sectionObserver?.disconnect()
+  clearWave()
 })
 </script>
 
 <template>
   <div
+    ref="rootEl"
     class="overflow-hidden rounded-lg border-[3px] border-white bg-brand-ink-soft shadow-brutal-invert-lg"
     role="region"
     aria-label="All creative tools mosaic"
@@ -75,7 +111,7 @@ onUnmounted(() => {
           Full lineup · live wall
         </p>
         <p class="mt-1 text-sm text-white/55">
-          {{ totalTools }} tools across image, video, and audio — all visible, auto-playing muted
+          {{ totalTools }} tools across image, video, and audio — tap any tile for sound
         </p>
       </div>
       <div class="flex flex-wrap gap-2" aria-hidden="true">
@@ -83,7 +119,7 @@ onUnmounted(() => {
           v-for="category in toolCategories"
           :key="category.id"
           class="rounded-md px-3 py-1.5 text-xs font-bold tracking-wide uppercase"
-          :class="categoryChip[category.id]"
+          :class="categoryChip[category.id as 'image' | 'video' | 'audio']"
         >
           {{ category.eyebrow.replace('AI ', '') }} · {{ category.items.length }}
         </span>
@@ -113,7 +149,7 @@ onUnmounted(() => {
           <p class="text-xs text-white/50 sm:max-w-md sm:text-right">{{ band.description }}</p>
         </div>
 
-        <div class="grid grid-cols-2 gap-px bg-white/20 sm:grid-cols-3">
+        <div class="grid grid-cols-1 gap-px bg-white/20 min-[400px]:grid-cols-2 lg:grid-cols-3">
           <article
             v-for="item in band.items"
             :key="`${band.id}-${item.name}`"
@@ -126,22 +162,23 @@ onUnmounted(() => {
               :label="item.name"
               aspect="aspect-video"
               lazy
+              poster-size="sm"
               :playing="isLive(item.globalIndex)"
               class="rounded-none"
             />
 
             <div
-              class="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-brand-ink via-brand-ink/85 to-transparent px-3 pt-12 pb-3"
+              class="pointer-events-none absolute inset-x-0 bottom-0 z-[5] bg-gradient-to-t from-brand-ink via-brand-ink/85 to-transparent px-3 pt-10 pb-9"
             >
               <p
-                class="inline-flex rounded border border-white/20 bg-brand-ink/80 px-1.5 py-0.5 text-[10px] font-semibold tracking-[0.16em] text-white/70 uppercase"
+                class="inline-flex rounded border border-white/20 bg-brand-ink/80 px-1.5 py-0.5 text-xs font-semibold tracking-[0.16em] text-white/70 uppercase"
               >
                 {{ band.eyebrow.replace('AI ', '') }}
               </p>
               <h4 class="font-display mt-1.5 text-sm font-bold text-white sm:text-base">
                 {{ item.name }}
               </h4>
-              <p class="mt-0.5 line-clamp-2 text-[11px] leading-4 text-white/55 sm:text-xs sm:leading-5">
+              <p class="mt-0.5 line-clamp-2 text-xs leading-5 text-white/55">
                 {{ item.description }}
               </p>
             </div>
