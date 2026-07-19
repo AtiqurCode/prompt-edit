@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, toRef } from 'vue'
-import { wistiaAutoplayUrl, wistiaPoster } from '@/data/assets'
+import { wistiaPoster } from '@/data/assets'
 import { useAutoplayInView } from '@/composables/useAutoplayInView'
 import { useExclusiveUnmute } from '@/composables/useExclusiveUnmute'
 import { useWistiaInPlaceMute } from '@/composables/useWistiaInPlaceMute'
@@ -40,8 +40,11 @@ const active = computed(() => {
   return inViewActive.value
 })
 
-const embedSrc = computed(() => wistiaAutoplayUrl(props.wistiaId))
 const posterSrc = computed(() => wistiaPoster(props.wistiaId, props.posterSize))
+const embedClass = computed(
+  () =>
+    `wistia_embed wistia_async_${props.wistiaId} absolute inset-0 h-full w-full`,
+)
 
 const { setMuted } = useWistiaInPlaceMute(toRef(props, 'wistiaId'), active, soundOn)
 
@@ -50,8 +53,12 @@ function onToggleSound(event: Event) {
   event.stopPropagation()
   const turningOn = !soundOn.value
   toggle()
-  // Same player, same timecode — only flip mute inside the click gesture.
-  setMuted(!turningOn)
+  // Must stay inside this gesture — iframe postMessage unmute fails on mobile.
+  const ok = setMuted(!turningOn)
+  if (turningOn && !ok) {
+    // Player not ready yet; flip UI back so we don't show a fake unmuted state.
+    toggle()
+  }
 }
 </script>
 
@@ -68,15 +75,13 @@ function onToggleSound(event: Event) {
       height="540"
     >
 
-    <iframe
+    <!-- Inline embed (not iframe): sync mute/unmute works on iOS/Android. -->
+    <div
       v-if="active"
-      :src="embedSrc"
+      :key="wistiaId"
+      :class="embedClass"
       :title="label"
-      class="wistia_embed pointer-events-none absolute inset-0 h-full w-full"
-      name="wistia_embed"
-      frameborder="0"
-      allow="autoplay; fullscreen"
-      loading="eager"
+      aria-hidden="true"
     />
 
     <button
