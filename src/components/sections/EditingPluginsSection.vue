@@ -17,12 +17,18 @@ import ScrollReveal from '@/components/shared/ScrollReveal.vue'
               class="rounded-md"
             />
           </div>
-          <span class="shadow-brutal-sm absolute -top-4 left-6 rotate-1 rounded-md border-2 border-brand-ink bg-white px-4 py-2 text-sm font-semibold text-brand-ink">
-            Premiere Pro
-          </span>
-          <span class="shadow-brutal-sm absolute -bottom-4 right-6 -rotate-1 rounded-md border-2 border-brand-ink bg-brand-cta px-4 py-2 text-sm font-semibold text-brand-ink">
-            DaVinci Resolve
-          </span>
+          <div class="mt-3 flex flex-wrap gap-2 sm:contents">
+            <span
+              class="shadow-brutal-sm rounded-md border-2 border-brand-ink bg-white px-4 py-2 text-sm font-semibold text-brand-ink sm:absolute sm:-top-4 sm:left-6 sm:mt-0 sm:rotate-1"
+            >
+              Premiere Pro
+            </span>
+            <span
+              class="shadow-brutal-sm rounded-md border-2 border-brand-ink bg-brand-cta px-4 py-2 text-sm font-semibold text-brand-ink sm:absolute sm:-bottom-4 sm:right-6 sm:mt-0 sm:-rotate-1"
+            >
+              DaVinci Resolve
+            </span>
+          </div>
         </div>
       </ScrollReveal>
 

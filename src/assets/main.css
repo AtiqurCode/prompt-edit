@@ -30,8 +30,20 @@ body {
   color: #ffffff;
 }
 
+html {
+  scroll-padding-top: var(--site-header-offset, 5.5rem);
+}
+
 #app {
   min-height: 100vh;
+}
+
+#tools,
+#templates,
+#pricing,
+#faq,
+#top {
+  scroll-margin-top: var(--site-header-offset, 5.5rem);
 }
 
 @utility animate-marquee {
@@ -138,6 +150,12 @@ body {
   .brutal-press {
     transition: none;
   }
+
+  .brutal-press:hover,
+  .brutal-press:active {
+    transform: none;
+    box-shadow: 4px 4px 0 0 var(--brutal-shadow-color);
+  }
 }
 
 .display-headline {
@@ -201,6 +219,12 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .mosaic-tile,
+  .mosaic-poster-drift {
+    animation: none;
+  }
+}
+
+@media (max-width: 639px) {
   .mosaic-poster-drift {
     animation: none;
   }

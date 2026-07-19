@@ -6,11 +6,12 @@ import CountUpNumber from './CountUpNumber.vue'
 <template>
   <div class="border-y-2 border-white/20 bg-brand-ink">
     <div class="mx-auto max-w-7xl px-6 py-6">
-      <div class="h-scroll-rail">
+      <div class="h-scroll-rail" role="list" aria-label="Key stats">
         <div
           v-for="stat in stats"
           :key="stat.label"
-          class="shadow-brutal-invert min-w-[11rem] rounded-md border-[3px] border-white bg-brand-ink-soft px-5 py-4"
+          role="listitem"
+          class="shadow-brutal-invert min-w-[10rem] rounded-md border-[3px] border-white bg-brand-ink-soft px-5 py-4 sm:min-w-[11rem]"
         >
           <p class="font-display text-2xl font-bold text-white">
             <CountUpNumber :value="stat.value" />

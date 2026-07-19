@@ -57,8 +57,8 @@ function initials(name: string) {
           :delay="160 + i * 80"
         >
           <figure
-            class="shadow-brutal-invert h-full rounded-md border-2 border-white bg-brand-ink-soft p-6 transition-transform hover:rotate-0"
-            :class="i % 2 === 0 ? 'rotate-1' : '-rotate-1'"
+            class="shadow-brutal-invert h-full rounded-md border-2 border-white bg-brand-ink-soft p-6 motion-safe:transition-transform motion-safe:hover:rotate-0 max-sm:rotate-0"
+            :class="i % 2 === 0 ? 'sm:rotate-1' : 'sm:-rotate-1'"
           >
             <blockquote class="text-base leading-7 text-white/75">“{{ testimonial.quote }}”</blockquote>
             <figcaption class="mt-6 flex items-center gap-3">

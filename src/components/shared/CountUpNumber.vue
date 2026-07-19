@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { onUnmounted, ref, watch } from 'vue'
 import { useInView } from '@/composables/useInView'
 
 const { value } = defineProps<{ value: string }>()
@@ -7,6 +7,7 @@ const { value } = defineProps<{ value: string }>()
 const el = ref<HTMLElement | null>(null)
 const inView = useInView(el)
 const display = ref('0')
+let rafId = 0
 
 const match = value.match(/^([\d,]+)(.*)$/)
 const target = match ? parseInt(match[1]!.replace(/,/g, ''), 10) : 0
@@ -27,13 +28,17 @@ watch(inView, (isVisible) => {
     const progress = Math.min((now - start) / duration, 1)
     const eased = 1 - Math.pow(1 - progress, 3)
     display.value = Math.round(target * eased).toLocaleString('en-US')
-    if (progress < 1) requestAnimationFrame(tick)
+    if (progress < 1) rafId = requestAnimationFrame(tick)
   }
 
-  requestAnimationFrame(tick)
+  rafId = requestAnimationFrame(tick)
+})
+
+onUnmounted(() => {
+  if (rafId) cancelAnimationFrame(rafId)
 })
 </script>
 
 <template>
-  <span ref="el">{{ display }}{{ suffix }}</span>
+  <span ref="el" :aria-label="value">{{ display }}{{ suffix }}</span>
 </template>

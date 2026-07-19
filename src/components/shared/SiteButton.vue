@@ -16,8 +16,9 @@ const {
 }>()
 
 const classes = computed(() => [
-  'brutal-press inline-flex cursor-pointer items-center justify-center rounded-md border-[3px] font-display font-bold whitespace-nowrap uppercase tracking-wide focus-visible:outline-2 focus-visible:outline-offset-2',
-  size === 'lg' ? 'px-8 py-4 text-base' : 'px-6 py-3 text-sm',
+  'brutal-press inline-flex cursor-pointer items-center justify-center rounded-md border-[3px] font-display font-bold uppercase tracking-wide text-center text-balance focus-visible:outline-2 focus-visible:outline-offset-2',
+  'w-full whitespace-normal sm:w-auto sm:whitespace-nowrap',
+  size === 'lg' ? 'px-5 py-4 text-sm sm:px-8 sm:text-base' : 'px-5 py-3 text-sm sm:px-6',
   surface === 'dark'
     ? 'shadow-brutal-invert border-white focus-visible:outline-white'
     : 'shadow-brutal border-brand-ink focus-visible:outline-brand-ink',

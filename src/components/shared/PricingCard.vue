@@ -7,11 +7,11 @@ defineProps<{ plan: PricingPlan }>()
 
 <template>
   <div
-    class="flex h-full flex-col rounded-lg border-[3px] border-brand-ink p-8 transition-transform duration-150 hover:-translate-y-1"
+    class="flex h-full flex-col rounded-lg border-[3px] border-brand-ink p-8 motion-safe:transition-transform motion-safe:duration-150 motion-safe:hover:-translate-y-1"
     :class="
       plan.highlighted
-        ? 'shadow-brutal-cta rotate-1 bg-brand-ink text-white hover:rotate-0'
-        : 'shadow-brutal -rotate-1 bg-white text-brand-ink hover:rotate-0'
+        ? 'shadow-brutal-cta max-sm:rotate-0 rotate-1 bg-brand-ink text-white motion-safe:hover:rotate-0'
+        : 'shadow-brutal max-sm:rotate-0 -rotate-1 bg-white text-brand-ink motion-safe:hover:rotate-0'
     "
   >
     <span
@@ -34,7 +34,7 @@ defineProps<{ plan: PricingPlan }>()
 
     <ul class="mt-8 flex-1 space-y-3 text-sm">
       <li v-for="feature in plan.features" :key="feature" class="flex gap-2.5">
-        <svg viewBox="0 0 20 20" class="mt-0.5 h-5 w-5 shrink-0 fill-brand-cta">
+        <svg viewBox="0 0 20 20" class="mt-0.5 h-5 w-5 shrink-0 fill-brand-cta" aria-hidden="true">
           <path
             fill-rule="evenodd"
             d="M16.7 5.3a1 1 0 010 1.4l-7.5 7.5a1 1 0 01-1.4 0l-3.5-3.5a1 1 0 111.4-1.4l2.8 2.8 6.8-6.8a1 1 0 011.4 0z"

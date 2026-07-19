@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onUnmounted, ref } from 'vue'
 
 const {
   beforeSrc,
@@ -27,6 +27,7 @@ function setPositionFromClientX(clientX: number) {
 
 function onPointerDown(event: PointerEvent) {
   isDragging.value = true
+  ;(event.currentTarget as HTMLElement | null)?.setPointerCapture?.(event.pointerId)
   setPositionFromClientX(event.clientX)
   window.addEventListener('pointermove', onPointerMove)
   window.addEventListener('pointerup', onPointerUp)
@@ -58,13 +59,14 @@ function onKeydown(event: KeyboardEvent) {
   }
   event.preventDefault()
 }
+
+onUnmounted(onPointerUp)
 </script>
 
 <template>
   <div
     ref="containerRef"
-    class="relative aspect-4/3 w-full touch-none overflow-hidden rounded-md bg-brand-ink select-none sm:aspect-video"
-    @pointerdown="onPointerDown"
+    class="relative aspect-4/3 w-full overflow-hidden rounded-md bg-brand-ink select-none touch-pan-y sm:aspect-video"
   >
     <img
       :src="beforeSrc"
@@ -86,10 +88,10 @@ function onKeydown(event: KeyboardEvent) {
     </div>
 
     <span
-      class="pointer-events-none absolute top-3 left-3 rounded-md border-2 border-white bg-brand-ink px-3 py-1 text-xs font-semibold tracking-wide text-white uppercase"
+      class="pointer-events-none absolute top-3 left-3 max-w-[42%] truncate rounded-md border-2 border-white bg-brand-ink px-3 py-1 text-xs font-semibold tracking-wide text-white uppercase"
     >{{ beforeLabel }}</span>
     <span
-      class="pointer-events-none absolute top-3 right-3 rounded-md border-2 border-brand-ink bg-brand-cta px-3 py-1 text-xs font-semibold tracking-wide text-brand-ink uppercase"
+      class="pointer-events-none absolute top-3 right-3 max-w-[42%] truncate rounded-md border-2 border-brand-ink bg-brand-cta px-3 py-1 text-xs font-semibold tracking-wide text-brand-ink uppercase"
     >{{ afterLabel }}</span>
 
     <div
@@ -105,11 +107,11 @@ function onKeydown(event: KeyboardEvent) {
         aria-valuemin="0"
         aria-valuemax="100"
         :aria-valuenow="Math.round(position)"
-        class="shadow-brutal-sm brutal-press pointer-events-auto absolute top-1/2 left-0 flex h-11 w-11 -translate-x-1/2 -translate-y-1/2 cursor-ew-resize items-center justify-center rounded-md border-[3px] border-brand-ink bg-white text-brand-ink outline-none focus-visible:ring-2 focus-visible:ring-brand-cta"
+        class="shadow-brutal-sm brutal-press pointer-events-auto absolute top-1/2 left-0 flex h-11 w-11 -translate-x-1/2 -translate-y-1/2 cursor-ew-resize touch-none items-center justify-center rounded-md border-[3px] border-brand-ink bg-white text-brand-ink outline-none focus-visible:ring-2 focus-visible:ring-brand-cta"
         @pointerdown.stop="onPointerDown"
         @keydown="onKeydown"
       >
-        <svg viewBox="0 0 24 24" class="h-5 w-5 fill-current">
+        <svg viewBox="0 0 24 24" class="h-5 w-5 fill-current" aria-hidden="true">
           <path d="M8 5l-6 7 6 7V5zm8 0v14l6-7-6-7z" />
         </svg>
       </button>

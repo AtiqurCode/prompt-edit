@@ -16,9 +16,12 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
 </script>
 
 <template>
-  <div class="fixed top-0 right-0 left-0 z-60 h-1.5 border-b-2 border-brand-ink bg-white/10">
+  <div
+    class="fixed top-0 right-0 left-0 z-60 h-1.5 border-b-2 border-brand-ink bg-white/10"
+    aria-hidden="true"
+  >
     <div
-      class="h-full w-full origin-left bg-brand-cta transition-transform duration-150 ease-out"
+      class="h-full w-full origin-left bg-brand-cta motion-safe:transition-transform motion-safe:duration-150 motion-safe:ease-out"
       :style="{ transform: `scaleX(${progress / 100})` }"
     />
   </div>

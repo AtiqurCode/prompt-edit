@@ -19,7 +19,9 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
     :class="scrolled ? 'py-2 shadow-brutal' : 'py-4'"
   >
     <div class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-6">
-      <img :src="images.logo" alt="PromptEdit" class="h-8 w-auto transition-all sm:h-9">
+      <a href="#top" class="cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">
+        <img :src="images.logo" alt="PromptEdit home" class="h-8 w-auto transition-all sm:h-9">
+      </a>
       <SiteButton href="#pricing" size="md">Get Started</SiteButton>
     </div>
   </header>

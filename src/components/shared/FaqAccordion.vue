@@ -20,8 +20,9 @@ function toggle(index: number) {
     <div v-for="(item, index) in items" :key="item.question">
       <h3>
         <button
+          :id="`faq-trigger-${index}`"
           type="button"
-          class="flex w-full items-center justify-between gap-4 rounded-lg py-5 text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-cta"
+          class="flex w-full min-h-11 items-center justify-between gap-4 rounded-lg py-5 text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-cta"
           :aria-expanded="openState.has(index)"
           :aria-controls="`faq-panel-${index}`"
           @click="toggle(index)"
@@ -34,18 +35,25 @@ function toggle(index: number) {
           </span>
           <svg
             viewBox="0 0 20 20"
-            class="h-5 w-5 shrink-0 fill-none stroke-brand-cta stroke-2 transition-transform duration-300"
+            class="h-5 w-5 shrink-0 fill-none stroke-brand-cta stroke-2 motion-safe:transition-transform motion-safe:duration-300"
             :class="{ 'rotate-45': openState.has(index) }"
+            aria-hidden="true"
           >
             <path d="M10 4v12M4 10h12" stroke-linecap="round" />
           </svg>
         </button>
       </h3>
       <div
-        class="grid transition-[grid-template-rows] duration-300 ease-out"
+        class="grid motion-safe:transition-[grid-template-rows] motion-safe:duration-300 motion-safe:ease-out"
         :style="{ gridTemplateRows: openState.has(index) ? '1fr' : '0fr' }"
       >
-        <div :id="`faq-panel-${index}`" class="overflow-hidden">
+        <div
+          :id="`faq-panel-${index}`"
+          class="overflow-hidden"
+          role="region"
+          :aria-labelledby="`faq-trigger-${index}`"
+          :hidden="!openState.has(index)"
+        >
           <p class="pb-5 pl-9 text-brand-slate">{{ item.answer }}</p>
         </div>
       </div>

@@ -1,17 +1,25 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from 'vue'
-import type { IconName } from '@/types/content'
+import { assetCategories } from '@/data/assetCategories'
 import IconGlyph from './IconGlyph.vue'
+import { usePrefersReducedMotion } from '@/composables/usePrefersReducedMotion'
 
-const steps: { id: string; label: string; icon: IconName }[] = [
-  { id: 'luts', label: 'LUTs', icon: 'luts' },
-  { id: 'sfx', label: 'SFX', icon: 'sfx' },
-  { id: 'text', label: 'Text', icon: 'text' },
-  { id: 'overlays', label: 'Overlays', icon: 'overlays' },
-  { id: 'backgrounds', label: 'Backgrounds', icon: 'backgrounds' },
-]
+const STEP_LABELS: Record<string, string> = {
+  luts: 'LUTs',
+  sfx: 'SFX',
+  text: 'Text',
+  overlays: 'Overlays',
+  backgrounds: 'Backgrounds',
+}
+
+const steps = assetCategories.map((category) => ({
+  id: category.id,
+  shortLabel: STEP_LABELS[category.id] ?? category.id,
+  icon: category.icon,
+}))
 
 const activeId = ref(steps[0]?.id ?? 'luts')
+const reducedMotion = usePrefersReducedMotion()
 let observer: IntersectionObserver | null = null
 
 function scrollToStep(id: string) {
@@ -19,7 +27,7 @@ function scrollToStep(id: string) {
   if (!el) return
   const offset = 96
   const top = el.getBoundingClientRect().top + window.scrollY - offset
-  window.scrollTo({ top, behavior: 'smooth' })
+  window.scrollTo({ top, behavior: reducedMotion.value ? 'auto' : 'smooth' })
 }
 
 onMounted(() => {
@@ -48,14 +56,16 @@ onUnmounted(() => observer?.disconnect())
 </script>
 
 <template>
-  <nav aria-label="Templates library categories" class="lg:sticky lg:top-28 lg:self-start">
-    <!-- Mobile: horizontal pills -->
-    <div class="flex gap-2 overflow-x-auto pb-2 lg:hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+  <nav
+    aria-label="Templates library categories"
+    class="lg:sticky lg:top-[var(--site-header-offset,5.5rem)] lg:self-start"
+  >
+    <div class="flex gap-2 overflow-x-auto pb-2 [scrollbar-width:thin] lg:hidden">
       <button
         v-for="step in steps"
         :key="step.id"
         type="button"
-        class="shadow-brutal-sm brutal-press flex shrink-0 cursor-pointer items-center gap-1.5 rounded-md border-2 border-brand-ink px-4 py-3 text-sm font-semibold transition-colors"
+        class="shadow-brutal-sm brutal-press flex min-h-11 shrink-0 cursor-pointer items-center gap-1.5 rounded-md border-2 border-brand-ink px-4 py-3 text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-ink"
         :class="
           activeId === step.id
             ? 'bg-brand-cta text-brand-ink'
@@ -65,11 +75,10 @@ onUnmounted(() => observer?.disconnect())
         @click="scrollToStep(step.id)"
       >
         <IconGlyph :name="step.icon" class="h-4 w-4" />
-        {{ step.label }}
+        {{ step.shortLabel }}
       </button>
     </div>
 
-    <!-- Desktop: vertical stepper -->
     <ol class="hidden space-y-1 lg:block">
       <li v-for="(step, index) in steps" :key="step.id" class="relative">
         <div
@@ -79,7 +88,7 @@ onUnmounted(() => observer?.disconnect())
         />
         <button
           type="button"
-          class="group flex w-full cursor-pointer items-center gap-3 rounded-md px-2 py-2.5 text-left transition-colors"
+          class="group flex w-full min-h-11 cursor-pointer items-center gap-3 rounded-md px-2 py-2.5 text-left transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-ink"
           :class="activeId === step.id ? 'bg-brand-cta/15' : 'hover:bg-brand-surface'"
           :aria-current="activeId === step.id ? 'step' : undefined"
           @click="scrollToStep(step.id)"
@@ -100,7 +109,7 @@ onUnmounted(() => observer?.disconnect())
               class="block font-semibold"
               :class="activeId === step.id ? 'text-brand-ink' : 'text-brand-slate'"
             >
-              {{ step.label }}
+              {{ step.shortLabel }}
             </span>
           </span>
         </button>
