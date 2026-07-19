@@ -21,72 +21,50 @@ const pillars = [
 </script>
 
 <template>
-  <section class="surface-paper relative overflow-hidden py-24 sm:py-32">
-    <div class="pointer-events-none absolute -top-24 -right-24 h-72 w-72 rounded-full bg-brand-blue/10 blur-3xl" />
-    <div class="pointer-events-none absolute -bottom-24 -left-24 h-72 w-72 rounded-full bg-brand-cta/10 blur-3xl" />
-
-    <div class="relative mx-auto max-w-7xl px-6">
-      <div class="grid grid-cols-1 items-center gap-14 lg:grid-cols-2 lg:gap-16">
+  <section class="bg-white py-20 sm:py-28">
+    <div class="mx-auto max-w-7xl px-6">
+      <div class="grid grid-cols-1 items-start gap-14 lg:grid-cols-[0.9fr_1.1fr]">
         <ScrollReveal>
-          <p class="eyebrow text-brand-blue-deep">Introducing Prompt Edit</p>
-          <h2 class="section-title mt-4 text-brand-ink">
+          <p class="text-sm font-semibold tracking-[0.28em] text-brand-blue-deep uppercase">
+            Introducing Prompt Edit
+          </p>
+          <h2 class="font-display mt-4 max-w-xl text-4xl font-bold text-brand-ink sm:text-5xl">
             Think of PromptEdit like a grocery store for AI.
           </h2>
-          <p class="mt-6 max-w-lg text-lg leading-relaxed text-brand-slate">
+          <p class="mt-6 max-w-lg text-lg leading-8 text-brand-slate">
             Instead of signing up for a bunch of different websites, learning a bunch of different
             interfaces, and stacking expensive subscriptions on top of each other, PromptEdit gives
             you one place to access all the major tools you need to create AI content.
           </p>
 
-          <div class="mt-10 space-y-4">
-            <div
-              v-for="(pillar, i) in pillars"
-              :key="pillar.title"
-              class="group rounded-xl border border-brand-ink/8 bg-white p-5 transition-colors hover:border-brand-cta/40"
-            >
-              <div class="flex gap-4">
-                <span class="font-display text-sm font-bold text-brand-cta tabular-nums">
-                  {{ String(i + 1).padStart(2, '0') }}
-                </span>
-                <div>
-                  <h3 class="font-display text-base font-semibold text-brand-ink">{{ pillar.title }}</h3>
-                  <p class="mt-1.5 text-sm leading-relaxed text-brand-slate">{{ pillar.copy }}</p>
-                </div>
-              </div>
+          <div class="mt-10 space-y-6">
+            <div v-for="pillar in pillars" :key="pillar.title" class="border-l-2 border-brand-cta pl-5">
+              <h3 class="text-lg font-bold text-brand-ink">{{ pillar.title }}</h3>
+              <p class="mt-2 text-sm leading-7 text-brand-slate">{{ pillar.copy }}</p>
             </div>
           </div>
 
-          <SiteButton href="#pricing" size="lg" class="mt-10">
+          <SiteButton href="#pricing" size="lg" surface="light" class="mt-10">
             Click To Get Started Today
           </SiteButton>
         </ScrollReveal>
 
-        <ScrollReveal :delay="120" direction="right">
-          <div class="rounded-2xl border border-brand-ink/10 bg-brand-ink p-3 shadow-[0_30px_80px_rgba(0,13,34,0.18)] sm:p-4">
-            <div class="mb-3 flex items-center justify-between px-1">
-              <div class="flex items-center gap-2">
-                <span class="h-2.5 w-2.5 rounded-full bg-brand-coral" />
-                <span class="h-2.5 w-2.5 rounded-full bg-brand-yellow" />
-                <span class="h-2.5 w-2.5 rounded-full bg-brand-cta" />
-              </div>
-              <span class="text-[10px] font-semibold tracking-[0.2em] text-white/40 uppercase">Compare workflows</span>
-            </div>
-
+        <ScrollReveal :delay="120">
+          <div class="shadow-brutal-lg overflow-hidden rounded-lg border-[3px] border-brand-ink bg-brand-ink p-3 sm:p-4">
             <BeforeAfterSlider
               :before-src="images.before"
               :after-src="images.after"
               before-label="Juggling Subscriptions"
               after-label="One PromptEdit"
             />
-
-            <div class="mt-4 flex flex-col gap-4 border-t border-white/10 pt-4 sm:flex-row sm:items-center sm:justify-between">
+            <div class="mt-5 flex flex-col gap-4 border-t-2 border-white/20 pt-5 sm:flex-row sm:items-center sm:justify-between">
               <img
                 :src="images.trustedBy"
                 alt="Trusted by creators worldwide"
                 class="h-auto w-full max-w-xs opacity-90"
               >
-              <p class="max-w-xs text-sm leading-relaxed text-white/55">
-                Drag the slider to see stacking tools vs one workflow.
+              <p class="max-w-xs text-sm leading-7 text-white/65">
+                Drag the slider to see the difference between stacking tools and using one workflow.
               </p>
             </div>
           </div>

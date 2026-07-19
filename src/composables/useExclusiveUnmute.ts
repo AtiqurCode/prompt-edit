@@ -4,7 +4,7 @@ import { computed, onUnmounted, ref, watch, type Ref } from 'vue'
 const unmutedOwner = ref<symbol | null>(null)
 let nextId = 0
 
-export function useExclusiveUnmute(enabled: Ref<boolean>) {
+export function useExclusiveUnmute(enabled: Ref<boolean> = ref(true)) {
   const owner = Symbol(`preview-${++nextId}`)
   const soundOn = computed(() => unmutedOwner.value === owner)
 
@@ -19,9 +19,14 @@ export function useExclusiveUnmute(enabled: Ref<boolean>) {
 
   watch(enabled, (isEnabled) => {
     if (!isEnabled) release()
-  })
+  }, { flush: 'sync' })
 
   onUnmounted(release)
 
   return { soundOn, toggle, release }
+}
+
+/** Test helper — clear exclusive unmute owner between unit tests. */
+export function __resetExclusiveUnmuteForTests() {
+  unmutedOwner.value = null
 }

@@ -12,6 +12,6 @@ export const soundCategories: SoundCategory[] = [
   { name: 'Whooshes', wistiaId: 'm4foab6mu6' },
 ]
 
-export const sfxMuted = { label: 'No Sound', wistiaId: '9s64bo03y0' }
-export const sfxWithSound = { label: 'With Sound', wistiaId: 'hk5pw8ztg4' }
+export const sfxMuted = { label: 'Muted demo', wistiaId: '9s64bo03y0' }
+export const sfxWithSound = { label: 'Tap tile for sound', wistiaId: 'hk5pw8ztg4' }
 export const sfxDragAndDrop = { label: 'Drag & Drop Demo', wistiaId: 'qpkyxyck8g' }

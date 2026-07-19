@@ -1,47 +1,57 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useInView } from '@/composables/useInView'
-
 const { label, headline, tone = 'dark' } = defineProps<{
   label: string
   headline: string
   tone?: 'dark' | 'light'
 }>()
 
-const el = ref<HTMLElement | null>(null)
-const inView = useInView(el)
+const styles = {
+  dark: {
+    root: 'border-white/20 bg-brand-ink-soft text-white',
+    rail: 'bg-brand-cta',
+    label: 'text-brand-cta',
+    rule: 'bg-white/30',
+    next: 'text-white/50',
+    headline: 'text-white',
+  },
+  light: {
+    root: 'border-brand-ink bg-brand-surface text-brand-ink',
+    rail: 'bg-brand-ink',
+    label: 'text-brand-blue-deep',
+    rule: 'bg-brand-ink/25',
+    next: 'text-brand-blue-deep',
+    headline: 'text-brand-ink',
+  },
+} as const
 </script>
 
 <template>
-  <div
-    ref="el"
-    class="border-y py-12 sm:py-16"
-    :class="
-      tone === 'dark'
-        ? 'border-white/10 bg-brand-ink-soft text-white'
-        : 'border-brand-ink/8 bg-white text-brand-ink'
-    "
-  >
-    <div class="mx-auto flex max-w-7xl flex-col gap-4 px-6 sm:flex-row sm:items-end sm:justify-between">
-      <div>
-        <p
-          class="eyebrow"
-          :class="tone === 'dark' ? 'text-brand-cta' : 'text-brand-blue-deep'"
+  <div class="relative overflow-hidden border-y-[3px] py-12 sm:py-16" :class="styles[tone].root">
+    <div
+      class="pointer-events-none absolute inset-y-0 left-0 w-1.5"
+      :class="styles[tone].rail"
+      aria-hidden="true"
+    />
+
+    <div class="mx-auto max-w-7xl px-6">
+      <div class="grid grid-cols-1 items-end gap-8 lg:grid-cols-[14rem_1fr] lg:gap-12">
+        <div class="flex flex-col gap-3">
+          <p class="text-xs font-semibold tracking-[0.32em] uppercase" :class="styles[tone].label">
+            {{ label }}
+          </p>
+          <div class="h-px w-16" :class="styles[tone].rule" aria-hidden="true" />
+          <p class="font-mono text-xs tracking-[0.28em] uppercase" :class="styles[tone].next">
+            Next section
+          </p>
+        </div>
+
+        <h2
+          class="font-display max-w-4xl text-3xl font-bold leading-[1.1] sm:text-4xl lg:text-5xl"
+          :class="styles[tone].headline"
         >
-          {{ label }}
-        </p>
-        <span
-          v-if="inView"
-          class="draw-line mt-3 block h-0.5 w-16"
-          :class="tone === 'dark' ? 'bg-brand-cta' : 'bg-brand-blue'"
-        />
+          {{ headline }}
+        </h2>
       </div>
-      <h2
-        class="font-display max-w-3xl text-2xl font-bold tracking-tight sm:text-3xl lg:text-4xl"
-        :class="tone === 'dark' ? 'text-white' : 'text-brand-ink'"
-      >
-        {{ headline }}
-      </h2>
     </div>
   </div>
 </template>

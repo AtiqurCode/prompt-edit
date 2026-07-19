@@ -50,13 +50,19 @@ const { category, reverse = false } = defineProps<{
             :label="category.heading"
             aspect="aspect-4/3"
           />
-          <img
-            v-else
-            :src="category.gridImage"
-            :alt="category.gridImageAlt"
-            loading="lazy"
-            class="w-full object-cover"
-          >
+          <picture v-else>
+            <source
+              v-if="category.gridImageMobile"
+              media="(max-width: 639px)"
+              :srcset="category.gridImageMobile"
+            >
+            <img
+              :src="category.gridImage"
+              :alt="category.gridImageAlt"
+              loading="lazy"
+              class="w-full object-cover"
+            >
+          </picture>
         </div>
 
         <div

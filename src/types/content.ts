@@ -14,7 +14,18 @@ export interface ToolCategory {
 
 export type AccentColor = 'cta' | 'blue' | 'blueDeep' | 'yellow' | 'coral'
 
-export type IconName = 'luts' | 'sfx' | 'text' | 'overlays' | 'backgrounds' | 'mute' | 'unmute'
+export type IconName =
+  | 'luts'
+  | 'sfx'
+  | 'text'
+  | 'overlays'
+  | 'backgrounds'
+  | 'mute'
+  | 'unmute'
+  | 'fitInterface'
+  | 'fitCredits'
+  | 'fitCinematic'
+  | 'fitPacks'
 
 export interface AssetCategory {
   id: string

@@ -1,150 +1,153 @@
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { toolCategories } from '@/data/toolCategories'
-import { wistiaPoster } from '@/data/assets'
 import MediaPreviewFacade from '@/components/shared/MediaPreviewFacade.vue'
-import type { ToolItem } from '@/types/content'
+import { usePrefersReducedMotion } from '@/composables/usePrefersReducedMotion'
 
-const categoryMeta: Record<string, { accent: string; label: string; short: string }> = {
-  image: { accent: 'text-brand-blue', label: 'Image', short: 'Generate & edit visuals' },
-  video: { accent: 'text-brand-cta', label: 'Video', short: 'Films, ads, short-form' },
-  audio: { accent: 'text-brand-yellow', label: 'Audio', short: 'Voice, SFX, music' },
+const categoryChip: Record<'image' | 'video' | 'audio', string> = {
+  image: 'bg-brand-blue text-brand-ink',
+  video: 'bg-brand-cta text-brand-ink',
+  audio: 'bg-brand-yellow text-brand-ink',
 }
 
-/** One featured tool per lane — whole studio visible at once */
-const featured = reactive<Record<string, ToolItem>>(
-  Object.fromEntries(
-    toolCategories.map((cat) => [cat.id, cat.items[0]!]),
-  ),
+const mosaicBands = computed(() =>
+  toolCategories.map((category, categoryIndex) => ({
+    id: category.id as 'image' | 'video' | 'audio',
+    eyebrow: category.eyebrow,
+    description: category.description,
+    categoryIndex,
+    items: category.items,
+  })),
 )
 
-function featureTool(categoryId: string, item: ToolItem) {
-  featured[categoryId] = item
+const totalTools = computed(() =>
+  mosaicBands.value.reduce((sum, band) => sum + band.items.length, 0),
+)
+
+const rootEl = ref<HTMLElement | null>(null)
+const sectionInView = ref(false)
+const pageVisible = ref(true)
+const reducedMotion = usePrefersReducedMotion()
+
+/** Once the wall is on screen, every tile runs muted — no rotating slot wave. */
+const demosLive = computed(
+  () => !reducedMotion.value && sectionInView.value && pageVisible.value,
+)
+
+let sectionObserver: IntersectionObserver | null = null
+
+function onVisibility() {
+  pageVisible.value = document.visibilityState === 'visible'
 }
+
+onMounted(() => {
+  document.addEventListener('visibilitychange', onVisibility)
+
+  if (!rootEl.value) return
+  sectionObserver = new IntersectionObserver(
+    (entries) => {
+      sectionInView.value = entries[0]?.isIntersecting ?? false
+    },
+    { threshold: 0.05, rootMargin: '160px 0px' },
+  )
+  sectionObserver.observe(rootEl.value)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('visibilitychange', onVisibility)
+  sectionObserver?.disconnect()
+})
 </script>
 
 <template>
-  <!-- One look: Image · Video · Audio as three equal lanes -->
-  <div class="overflow-hidden rounded-2xl border border-white/12 bg-brand-ink-soft shadow-[0_30px_80px_rgba(0,0,0,0.35)]">
-    <div class="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 px-5 py-4 sm:px-6">
+  <div
+    ref="rootEl"
+    class="overflow-hidden rounded-lg border-[3px] border-white bg-brand-ink-soft shadow-brutal-invert-lg"
+    role="region"
+    aria-label="All creative tools mosaic"
+  >
+    <div
+      class="flex flex-wrap items-center justify-between gap-3 border-b-[3px] border-white bg-brand-ink px-5 py-4 sm:px-6"
+    >
       <div>
-        <p class="eyebrow text-brand-cta">Creative studio</p>
-        <p class="mt-1 text-sm text-white/55">Image, video, and audio — same marketplace, one screen</p>
+        <p class="text-xs font-semibold tracking-[0.28em] text-brand-cta uppercase">
+          Full lineup · live wall
+        </p>
+        <p class="mt-1 text-sm text-white/55">
+          {{ totalTools }} tools across image, video, and audio — tap any tile for sound
+        </p>
       </div>
-      <div class="flex items-center gap-2 text-[11px] font-semibold tracking-[0.18em] text-white/50 uppercase">
-        <span class="h-1.5 w-1.5 rounded-full bg-brand-blue" />
-        Image
-        <span class="mx-1 text-white/20">·</span>
-        <span class="h-1.5 w-1.5 rounded-full bg-brand-cta" />
-        Video
-        <span class="mx-1 text-white/20">·</span>
-        <span class="h-1.5 w-1.5 rounded-full bg-brand-yellow" />
-        Audio
+      <div class="flex flex-wrap gap-2" aria-hidden="true">
+        <span
+          v-for="category in toolCategories"
+          :key="category.id"
+          class="rounded-md px-3 py-1.5 text-xs font-bold tracking-wide uppercase"
+          :class="categoryChip[category.id as 'image' | 'video' | 'audio']"
+        >
+          {{ category.eyebrow.replace('AI ', '') }} · {{ category.items.length }}
+        </span>
       </div>
     </div>
 
-    <div class="grid grid-cols-1 divide-y divide-white/10 lg:grid-cols-3 lg:divide-x lg:divide-y-0">
-      <div
-        v-for="category in toolCategories"
-        :key="category.id"
-        class="flex flex-col p-4 sm:p-5"
+    <div class="space-y-0">
+      <section
+        v-for="band in mosaicBands"
+        :key="band.id"
+        class="border-b-[3px] border-white last:border-b-0"
+        :aria-label="band.eyebrow"
       >
-        <!-- Lane header -->
-        <div class="mb-4 flex items-start justify-between gap-3">
-          <div>
-            <p class="eyebrow" :class="categoryMeta[category.id]?.accent">
-              {{ categoryMeta[category.id]?.label }}
-            </p>
-            <p class="mt-1 text-xs text-white/50">{{ categoryMeta[category.id]?.short }}</p>
+        <div
+          class="flex flex-col gap-1 border-b-2 border-white/15 bg-brand-ink px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-5"
+        >
+          <div class="flex items-center gap-3">
+            <span
+              class="h-3 w-3 shrink-0 rounded-sm"
+              :class="categoryChip[band.id]"
+              aria-hidden="true"
+            />
+            <h3 class="font-display text-sm font-bold tracking-[0.18em] text-white uppercase">
+              {{ band.eyebrow }}
+            </h3>
           </div>
-          <span class="rounded-full border border-white/12 px-2.5 py-1 text-[10px] font-bold tabular-nums text-white/55">
-            {{ category.items.length }}
-          </span>
+          <p class="text-xs text-white/50 sm:max-w-md sm:text-right">{{ band.description }}</p>
         </div>
 
-        <!-- Featured live tile for this lane -->
-        <div
-          class="overflow-hidden rounded-xl border border-white/12 bg-black transition-[box-shadow,border-color] duration-300"
-          :class="
-            category.id === 'image'
-              ? 'hover:border-brand-blue/40'
-              : category.id === 'video'
-                ? 'hover:border-brand-cta/40'
-                : 'hover:border-brand-yellow/40'
-          "
-        >
-          <Transition
-            mode="out-in"
-            enter-active-class="transition duration-300 ease-out"
-            enter-from-class="opacity-0 scale-[1.02]"
-            enter-to-class="opacity-100 scale-100"
-            leave-active-class="transition duration-150 ease-in"
-            leave-from-class="opacity-100"
-            leave-to-class="opacity-0"
+        <div class="grid grid-cols-1 gap-px bg-white/20 min-[400px]:grid-cols-2 lg:grid-cols-3">
+          <article
+            v-for="(item, itemIndex) in band.items"
+            :key="`${band.id}-${item.name}`"
+            class="mosaic-tile relative bg-brand-ink"
+            :class="demosLive ? 'mosaic-tile-live' : ''"
+            :style="{ animationDelay: `${(band.categoryIndex * 3 + itemIndex) * 35}ms` }"
           >
-            <div :key="featured[category.id]!.wistiaId">
-              <MediaPreviewFacade
-                :wistia-id="featured[category.id]!.wistiaId"
-                :label="featured[category.id]!.name"
-                aspect="aspect-video"
-                class="min-h-[9rem]"
-              />
-            </div>
-          </Transition>
-        </div>
-        <div class="mt-3 mb-4 min-h-[4.5rem]">
-          <Transition
-            mode="out-in"
-            enter-active-class="transition duration-300 ease-out"
-            enter-from-class="opacity-0 translate-y-1"
-            enter-to-class="opacity-100 translate-y-0"
-            leave-active-class="transition duration-150"
-            leave-from-class="opacity-100"
-            leave-to-class="opacity-0"
-          >
-            <div :key="featured[category.id]!.name">
-              <h3 class="font-display text-lg font-bold tracking-tight text-white">
-                {{ featured[category.id]!.name }}
-              </h3>
-              <p class="mt-1 line-clamp-2 text-xs leading-relaxed text-white/50">
-                {{ featured[category.id]!.description }}
+            <MediaPreviewFacade
+              :wistia-id="item.wistiaId"
+              :label="item.name"
+              aspect="aspect-video"
+              lazy
+              poster-size="sm"
+              :playing="demosLive"
+              class="rounded-none"
+            />
+
+            <div
+              class="pointer-events-none absolute inset-x-0 bottom-0 z-[5] bg-gradient-to-t from-brand-ink via-brand-ink/85 to-transparent px-3 pt-10 pb-9"
+            >
+              <p
+                class="inline-flex rounded border border-white/20 bg-brand-ink/80 px-1.5 py-0.5 text-xs font-semibold tracking-[0.16em] text-white/70 uppercase"
+              >
+                {{ band.eyebrow.replace('AI ', '') }}
+              </p>
+              <h4 class="font-display mt-1.5 text-sm font-bold text-white sm:text-base">
+                {{ item.name }}
+              </h4>
+              <p class="mt-0.5 line-clamp-2 text-xs leading-5 text-white/55">
+                {{ item.description }}
               </p>
             </div>
-          </Transition>
+          </article>
         </div>
-
-        <!-- Full lane grid — everything visible -->
-        <div class="mt-auto grid grid-cols-2 gap-2">
-          <button
-            v-for="item in category.items"
-            :key="item.wistiaId"
-            type="button"
-            class="pressable group relative cursor-pointer overflow-hidden rounded-lg border text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-cta"
-            :class="
-              featured[category.id]!.wistiaId === item.wistiaId
-                ? 'border-brand-cta/60 ring-1 ring-brand-cta/40'
-                : 'border-white/10 hover:border-white/30'
-            "
-            :aria-pressed="featured[category.id]!.wistiaId === item.wistiaId"
-            @click="featureTool(category.id, item)"
-          >
-            <img
-              :src="wistiaPoster(item.wistiaId)"
-              :alt="item.name"
-              loading="lazy"
-              class="aspect-video w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
-            >
-            <div class="absolute inset-0 bg-gradient-to-t from-brand-ink/90 via-brand-ink/20 to-transparent" />
-            <span class="absolute inset-x-0 bottom-0 truncate px-2 pb-1.5 text-[11px] font-semibold text-white">
-              {{ item.name }}
-            </span>
-            <span
-              v-if="featured[category.id]!.wistiaId === item.wistiaId"
-              class="absolute top-1.5 right-1.5 h-1.5 w-1.5 rounded-full bg-brand-cta shadow-[0_0_8px_#27ae60]"
-            />
-          </button>
-        </div>
-      </div>
+      </section>
     </div>
   </div>
 </template>

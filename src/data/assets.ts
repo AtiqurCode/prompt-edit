@@ -25,21 +25,24 @@ export const images = {
   satisfactionGuarantee: `${KAJABI}/themes/2147904907/settings_images/wQYLmC5ETUStuMB0TZ5X_eLWaGR9tRXaCrbFrZLsu_Satisfaction_Guarantee.png`,
 }
 
+type PosterSize = 'sm' | 'md'
+
 /** Real still frame for a Wistia media id, resolved via oEmbed ahead of time. */
-export function wistiaPoster(wistiaId: string): string {
-  return wistiaThumbnails[wistiaId] ?? `https://fast.wistia.com/embed/medias/${wistiaId}/swatch`
+export function wistiaPoster(wistiaId: string, size: PosterSize = 'md'): string {
+  const base =
+    wistiaThumbnails[wistiaId] ?? `https://fast.wistia.com/embed/medias/${wistiaId}/swatch`
+  if (size === 'sm' && base.includes('image_crop_resized=')) {
+    return base.replace(/image_crop_resized=\d+x\d+/, 'image_crop_resized=480x270')
+  }
+  return base
 }
 
-export function wistiaEmbedUrl(wistiaId: string): string {
-  return `https://fast.wistia.net/embed/iframe/${wistiaId}?seo=true&videoFoam=true`
-}
-
-/** Looping, chrome-free embed used for the autoplay-on-scroll preview cards. */
-export function wistiaAutoplayUrl(wistiaId: string, { muted = true }: { muted?: boolean } = {}): string {
-  const params = new URLSearchParams({
+function wistiaPreviewParams() {
+  return new URLSearchParams({
     autoPlay: 'true',
-    muted: muted ? 'true' : 'false',
-    silentAutoPlay: muted ? 'true' : 'false',
+    muted: 'true',
+    silentAutoPlay: 'true',
+    playsinline: 'true',
     endVideoBehavior: 'loop',
     playButton: 'false',
     controlsVisibleOnLoad: 'false',
@@ -50,5 +53,9 @@ export function wistiaAutoplayUrl(wistiaId: string, { muted = true }: { muted?: 
     volumeControl: 'false',
     smallPlayButton: 'false',
   })
-  return `https://fast.wistia.net/embed/iframe/${wistiaId}?${params.toString()}`
+}
+
+/** Silent looping embed — unmute in place via the Wistia player API. */
+export function wistiaAutoplayUrl(wistiaId: string): string {
+  return `https://fast.wistia.net/embed/iframe/${wistiaId}?${wistiaPreviewParams().toString()}`
 }
