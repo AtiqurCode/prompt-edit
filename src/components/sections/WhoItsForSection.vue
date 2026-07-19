@@ -1,29 +1,37 @@
 <script setup lang="ts">
 import ScrollReveal from '@/components/shared/ScrollReveal.vue'
+import SectionEyebrow from '@/components/shared/SectionEyebrow.vue'
+import IconGlyph from '@/components/shared/IconGlyph.vue'
+import type { IconName } from '@/types/content'
 
-const fitPoints = [
+const fitPoints: {
+  title: string
+  copy: string
+  icon: IconName
+  index: string
+}[] = [
   {
     title: 'One interface, not ten',
     copy: 'Every major AI tool in one easy marketplace instead of a dozen separate logins.',
-    icon: 'M4 6h16M4 12h10M4 18h16',
+    icon: 'fitInterface',
     index: '01',
   },
   {
     title: 'Better credit value',
     copy: 'The best deal on AI credits, so you get more output for less money.',
-    icon: 'M12 3v18M7 8h7a2.5 2.5 0 010 5H8a2.5 2.5 0 000 5h8',
+    icon: 'fitCredits',
     index: '02',
   },
   {
     title: 'Cinematic in one drag',
     copy: 'Templates that skip the build-it-yourself step entirely.',
-    icon: 'M4 5h16v14H4z M4 9.5h16 M9 5v4.5',
+    icon: 'fitCinematic',
     index: '03',
   },
   {
     title: 'No $130 packs',
     copy: 'Tired of buying a bloated bundle just to get the one asset you actually wanted? Same.',
-    icon: 'M5 8h14l-1.5 11.5a2 2 0 01-2 1.5h-7a2 2 0 01-2-1.5L5 8z M9 8V6a3 3 0 016 0v2',
+    icon: 'fitPacks',
     index: '04',
   },
 ]
@@ -34,16 +42,7 @@ const fitPoints = [
     <div class="mx-auto max-w-7xl px-6">
       <div class="grid grid-cols-1 gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:items-end lg:gap-16">
         <ScrollReveal>
-          <div class="flex items-center gap-3">
-            <span
-              class="inline-flex h-8 w-8 items-center justify-center rounded-md border-2 border-brand-ink bg-brand-yellow font-display text-xs font-bold text-brand-ink"
-            >
-              04
-            </span>
-            <p class="text-sm font-semibold tracking-[0.28em] text-brand-blue-deep uppercase">
-              Who it is for
-            </p>
-          </div>
+          <SectionEyebrow label="Who it is for" chapter="04" tone="light" />
           <h2 class="font-display mt-5 text-4xl font-bold text-brand-ink sm:text-5xl">
             A PromptEdit subscription is for you if you want one workflow, not ten.
           </h2>
@@ -57,7 +56,6 @@ const fitPoints = [
         </ScrollReveal>
       </div>
 
-      <!-- Fit brief: numbered rows, not soft card grid -->
       <div class="mt-14 overflow-hidden rounded-lg border-[3px] border-brand-ink shadow-brutal-lg">
         <ScrollReveal
           v-for="(point, i) in fitPoints"
@@ -72,18 +70,7 @@ const fitPoints = [
             <span
               class="flex h-10 w-10 items-center justify-center rounded-md border-2 border-brand-ink bg-brand-ink text-brand-cta transition-colors duration-200 group-hover:bg-brand-cta group-hover:text-brand-ink"
             >
-              <svg
-                viewBox="0 0 24 24"
-                class="h-5 w-5"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                aria-hidden="true"
-              >
-                <path :d="point.icon" />
-              </svg>
+              <IconGlyph :name="point.icon" class="h-5 w-5" />
             </span>
           </div>
 

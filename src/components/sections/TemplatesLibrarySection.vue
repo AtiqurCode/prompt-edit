@@ -5,6 +5,7 @@ import SoundCategoryGrid from '@/components/shared/SoundCategoryGrid.vue'
 import CountUpNumber from '@/components/shared/CountUpNumber.vue'
 import ScrollReveal from '@/components/shared/ScrollReveal.vue'
 import TemplatesLibraryStepper from '@/components/shared/TemplatesLibraryStepper.vue'
+import SectionEyebrow from '@/components/shared/SectionEyebrow.vue'
 </script>
 
 <template>
@@ -14,24 +15,12 @@ import TemplatesLibraryStepper from '@/components/shared/TemplatesLibraryStepper
     </div>
 
     <div class="relative mx-auto max-w-7xl px-6">
-      <!-- Manifest header -->
       <div
         class="overflow-hidden rounded-lg border-[3px] border-brand-ink bg-white shadow-brutal-lg"
       >
-        <div
-          class="grid grid-cols-1 lg:grid-cols-[1.35fr_0.65fr]"
-        >
+        <div class="grid grid-cols-1 lg:grid-cols-[1.35fr_0.65fr]">
           <ScrollReveal class="border-b-[3px] border-brand-ink p-8 sm:p-10 lg:border-r lg:border-b-0">
-            <div class="flex flex-wrap items-center gap-3">
-              <span
-                class="inline-flex h-8 w-8 items-center justify-center rounded-md border-2 border-brand-ink bg-brand-ink font-display text-xs font-bold text-brand-cta"
-              >
-                03
-              </span>
-              <p class="text-sm font-semibold tracking-[0.28em] text-brand-blue-deep uppercase">
-                Content Creator Templates Library
-              </p>
-            </div>
+            <SectionEyebrow label="Content Creator Templates Library" chapter="03" tone="light" />
             <h2 class="font-display mt-5 max-w-3xl text-4xl font-bold text-brand-ink sm:text-5xl">
               Over 100,000 professionally designed assets, included with monthly.
             </h2>

@@ -1,6 +1,12 @@
 <script setup lang="ts">
 import { images } from '@/data/assets'
 
+const navLinks = [
+  { href: '#tools', label: 'Creative tools' },
+  { href: '#templates', label: 'Templates library' },
+  { href: '#pricing', label: 'Pricing' },
+]
+
 const legalLinks = [
   { href: '#', label: 'Terms & Conditions' },
   { href: '#', label: 'Privacy Policy' },
@@ -11,13 +17,12 @@ const legalLinks = [
 <template>
   <footer class="border-t-[3px] border-brand-cta bg-brand-ink text-white/50">
     <div class="mx-auto max-w-7xl px-6 py-16">
-      <!-- Top: brand + channels -->
       <div class="grid grid-cols-1 gap-12 border-b-2 border-white/15 pb-12 lg:grid-cols-[1.2fr_0.8fr_0.8fr]">
         <div>
           <div class="flex items-center gap-3">
             <img :src="images.logo" alt="PromptEdit" class="h-8 w-auto opacity-95">
             <span
-              class="rounded border border-brand-cta/50 px-2 py-0.5 text-[10px] font-semibold tracking-[0.22em] text-brand-cta uppercase"
+              class="rounded border border-brand-cta/50 px-2 py-0.5 text-xs font-semibold tracking-[0.22em] text-brand-cta uppercase"
             >
               Studio
             </span>
@@ -47,22 +52,12 @@ const legalLinks = [
           <p class="text-xs font-semibold tracking-[0.28em] text-white/50 uppercase">Navigate</p>
           <nav class="mt-4 flex flex-col gap-3" aria-label="Footer navigation">
             <a
-              href="#tools"
+              v-for="link in navLinks"
+              :key="link.href"
+              :href="link.href"
               class="cursor-pointer text-sm font-semibold text-white/70 transition-colors duration-200 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
             >
-              Creative tools
-            </a>
-            <a
-              href="#templates"
-              class="cursor-pointer text-sm font-semibold text-white/70 transition-colors duration-200 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-            >
-              Templates library
-            </a>
-            <a
-              href="#pricing"
-              class="cursor-pointer text-sm font-semibold text-white/70 transition-colors duration-200 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-            >
-              Pricing
+              {{ link.label }}
             </a>
           </nav>
         </div>
@@ -82,11 +77,10 @@ const legalLinks = [
         </div>
       </div>
 
-      <!-- Disclaimers -->
       <div class="mt-10 space-y-4 text-xs leading-relaxed text-white/50">
         <p>
-          &copy; 2025 Paul Xavier International LLC. By visiting this page, you agree to the terms,
-          policies, and disclaimers linked above.
+          &copy; {{ new Date().getFullYear() }} Paul Xavier International LLC. By visiting this page,
+          you agree to the terms, policies, and disclaimers linked above.
         </p>
 
         <p>

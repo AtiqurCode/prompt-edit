@@ -15,4 +15,9 @@ export const ICON_PATHS: Record<IconName, string> = {
     'M4 5h16a1 1 0 011 1v12a1 1 0 01-1 1H4a1 1 0 01-1-1V6a1 1 0 011-1z M8.5 11a2 2 0 100-4 2 2 0 000 4z M21 16l-5.5-5.5a1.5 1.5 0 00-2.12 0L4 19',
   mute: 'M11 5 6 9H2v6h4l5 4V5z M22 9l-6 6 M16 9l6 6',
   unmute: 'M11 5 6 9H2v6h4l5 4V5z M15.5 8.5a5 5 0 010 7',
+  fitInterface: 'M4 6h16M4 12h10M4 18h16',
+  fitCredits: 'M12 3v18M7 8h7a2.5 2.5 0 010 5H8a2.5 2.5 0 000 5h8',
+  fitCinematic: 'M4 5h16v14H4z M4 9.5h16 M9 5v4.5',
+  fitPacks:
+    'M5 8h14l-1.5 11.5a2 2 0 01-2 1.5h-7a2 2 0 01-2-1.5L5 8z M9 8V6a3 3 0 016 0v2',
 }
