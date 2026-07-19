@@ -21,10 +21,20 @@ git config --local user.email "atqur9@gmail.com"
 - Any other global git user
 - Any AI `Co-authored-by` trailer
 
+### Strip Cursor co-author trailers
+
+Repo hooks live in `.githooks/`. Enable once per clone:
+
+```sh
+git config --local core.hooksPath .githooks
+```
+
+Also disable Cursor attribution in the IDE: **Settings → Agents → Attribution** (off).
+
 ### Before every commit/push
 
 1. Check `git config --local user.name` and `git config --local user.email`
-2. Check `git log -1 --format='%an <%ae>'`
+2. Check `git log -1 --format='%an <%ae>'` and `git log -1 --format='%B'` (no AI trailers)
 3. Abort if the author is not `AtiqurCode <atqur9@gmail.com>`
 
 ## Commit message style

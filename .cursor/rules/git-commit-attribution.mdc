@@ -38,6 +38,22 @@ Do **not** create, amend, or push commits that include any of the following as a
 - `Co-authored-by` trailers for AI tools
 - Commit messages that advertise an AI assistant as helper/author
 
+## Auto-strip AI trailers (repo hooks)
+
+This repo uses `.githooks/` so Cursor cannot leave attribution in commits:
+
+```sh
+git config --local core.hooksPath .githooks
+```
+
+Hooks strip / block:
+
+- `Co-authored-by: Cursor <cursoragent@cursor.com>`
+- Claude / Anthropic co-author lines
+- `Made-with: Cursor` / “Generated with …” lines
+
+Also turn off Cursor IDE attribution: **Cursor Settings → Agents → Attribution** (or **Git & PRs → Attribution**).
+
 ## Commit message rules
 
 - Keep messages human and project-focused

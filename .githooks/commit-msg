@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+# Final pass: strip AI attribution before the commit object is written.
+set -euo pipefail
+
+msg_file="${1:?missing commit message file}"
+
+python3 - "$msg_file" <<'PY'
+import re
+import sys
+from pathlib import Path
+
+path = Path(sys.argv[1])
+text = path.read_text(encoding="utf-8")
+
+patterns = [
+    re.compile(
+        r"(?im)^Co-authored-by:.*(?:\bCursor\b|cursoragent@cursor\.com|Claude|Anthropic).*(?:\n|$)"
+    ),
+    re.compile(r"(?im)^Made-with:\s*Cursor.*(?:\n|$)"),
+    re.compile(r"(?im)^Generated with (?:Claude|Cursor).*(?:\n|$)"),
+    re.compile(r"(?im)^Via Cursor Agent.*(?:\n|$)"),
+]
+
+cleaned = text
+for pattern in patterns:
+    cleaned = pattern.sub("", cleaned)
+
+cleaned = cleaned.rstrip() + "\n"
+path.write_text(cleaned, encoding="utf-8")
+PY
