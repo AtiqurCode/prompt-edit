@@ -113,6 +113,7 @@ const heroPoints = [
               wistia-id="eu37od3pav"
               label="See PromptEdit in action"
               aspect="aspect-video"
+              eager
               class="min-h-[16rem] sm:min-h-[24rem]"
             />
 

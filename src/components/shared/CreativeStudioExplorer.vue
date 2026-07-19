@@ -4,29 +4,21 @@ import { toolCategories } from '@/data/toolCategories'
 import MediaPreviewFacade from '@/components/shared/MediaPreviewFacade.vue'
 import { usePrefersReducedMotion } from '@/composables/usePrefersReducedMotion'
 
-const LIVE_SLOTS = 2
-const WAVE_MS = 3200
-
 const categoryChip: Record<'image' | 'video' | 'audio', string> = {
   image: 'bg-brand-blue text-brand-ink',
   video: 'bg-brand-cta text-brand-ink',
   audio: 'bg-brand-yellow text-brand-ink',
 }
 
-const mosaicBands = computed(() => {
-  let index = 0
-  return toolCategories.map((category, categoryIndex) => ({
+const mosaicBands = computed(() =>
+  toolCategories.map((category, categoryIndex) => ({
     id: category.id as 'image' | 'video' | 'audio',
     eyebrow: category.eyebrow,
     description: category.description,
     categoryIndex,
-    items: category.items.map((item) => {
-      const globalIndex = index
-      index += 1
-      return { ...item, globalIndex }
-    }),
-  }))
-})
+    items: category.items,
+  })),
+)
 
 const totalTools = computed(() =>
   mosaicBands.value.reduce((sum, band) => sum + band.items.length, 0),
@@ -35,44 +27,17 @@ const totalTools = computed(() =>
 const rootEl = ref<HTMLElement | null>(null)
 const sectionInView = ref(false)
 const pageVisible = ref(true)
-const waveOffset = ref(0)
 const reducedMotion = usePrefersReducedMotion()
 
-let waveTimer: ReturnType<typeof setInterval> | null = null
+/** Once the wall is on screen, every tile runs muted — no rotating slot wave. */
+const demosLive = computed(
+  () => !reducedMotion.value && sectionInView.value && pageVisible.value,
+)
+
 let sectionObserver: IntersectionObserver | null = null
-
-function isLive(globalIndex: number) {
-  if (reducedMotion.value || !sectionInView.value || !pageVisible.value) return false
-  const total = totalTools.value
-  if (total === 0) return false
-  const slots = Math.min(LIVE_SLOTS, total)
-  for (let i = 0; i < slots; i += 1) {
-    if ((waveOffset.value + i) % total === globalIndex) return true
-  }
-  return false
-}
-
-function clearWave() {
-  if (waveTimer) {
-    clearInterval(waveTimer)
-    waveTimer = null
-  }
-}
-
-function syncWave() {
-  clearWave()
-  if (reducedMotion.value || !sectionInView.value || !pageVisible.value) return
-
-  waveTimer = setInterval(() => {
-    const total = totalTools.value
-    if (total === 0) return
-    waveOffset.value = (waveOffset.value + 1) % total
-  }, WAVE_MS)
-}
 
 function onVisibility() {
   pageVisible.value = document.visibilityState === 'visible'
-  syncWave()
 }
 
 onMounted(() => {
@@ -82,9 +47,8 @@ onMounted(() => {
   sectionObserver = new IntersectionObserver(
     (entries) => {
       sectionInView.value = entries[0]?.isIntersecting ?? false
-      syncWave()
     },
-    { threshold: 0.12, rootMargin: '0px' },
+    { threshold: 0.05, rootMargin: '160px 0px' },
   )
   sectionObserver.observe(rootEl.value)
 })
@@ -92,7 +56,6 @@ onMounted(() => {
 onUnmounted(() => {
   document.removeEventListener('visibilitychange', onVisibility)
   sectionObserver?.disconnect()
-  clearWave()
 })
 </script>
 
@@ -151,11 +114,11 @@ onUnmounted(() => {
 
         <div class="grid grid-cols-1 gap-px bg-white/20 min-[400px]:grid-cols-2 lg:grid-cols-3">
           <article
-            v-for="item in band.items"
+            v-for="(item, itemIndex) in band.items"
             :key="`${band.id}-${item.name}`"
             class="mosaic-tile relative bg-brand-ink"
-            :class="isLive(item.globalIndex) ? 'mosaic-tile-live' : ''"
-            :style="{ animationDelay: `${(band.categoryIndex * 3 + item.globalIndex) * 35}ms` }"
+            :class="demosLive ? 'mosaic-tile-live' : ''"
+            :style="{ animationDelay: `${(band.categoryIndex * 3 + itemIndex) * 35}ms` }"
           >
             <MediaPreviewFacade
               :wistia-id="item.wistiaId"
@@ -163,7 +126,7 @@ onUnmounted(() => {
               aspect="aspect-video"
               lazy
               poster-size="sm"
-              :playing="isLive(item.globalIndex)"
+              :playing="demosLive"
               class="rounded-none"
             />
 

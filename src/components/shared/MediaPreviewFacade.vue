@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
-import { wistiaAutoplayUrl, wistiaPoster, wistiaSoundUrl } from '@/data/assets'
+import { computed, ref, toRef } from 'vue'
+import { wistiaAutoplayUrl, wistiaPoster } from '@/data/assets'
 import { useAutoplayInView } from '@/composables/useAutoplayInView'
 import { useExclusiveUnmute } from '@/composables/useExclusiveUnmute'
+import { useWistiaInPlaceMute } from '@/composables/useWistiaInPlaceMute'
 import IconGlyph from '@/components/shared/IconGlyph.vue'
 
 const props = withDefaults(
@@ -10,14 +11,17 @@ const props = withDefaults(
     wistiaId: string
     label?: string
     aspect?: string
-    /** When set, parent controls muted autoplay (mosaic wave). Unmute still forces live. */
+    /** When set, parent controls muted autoplay. */
     playing?: boolean
+    /** Mount muted autoplay immediately (hero / above-the-fold). */
+    eager?: boolean
     lazy?: boolean
     posterSize?: 'sm' | 'md'
   }>(),
   {
     label: 'preview',
     aspect: 'aspect-video',
+    eager: false,
     lazy: false,
     posterSize: 'md',
   },
@@ -27,25 +31,27 @@ const el = ref<HTMLElement | null>(null)
 const unmuteEnabled = ref(true)
 const { soundOn, toggle } = useExclusiveUnmute(unmuteEnabled)
 
-const autoplayEnabled = computed(() => props.playing === undefined && !soundOn.value)
+const autoplayEnabled = computed(() => !props.eager && props.playing === undefined)
 const inViewActive = useAutoplayInView(el, { enabled: autoplayEnabled })
 
 const active = computed(() => {
-  if (soundOn.value) return true
-  if (props.playing === undefined) return inViewActive.value
-  return props.playing
+  if (props.eager) return true
+  if (props.playing !== undefined) return props.playing
+  return inViewActive.value
 })
 
-const embedSrc = computed(() =>
-  soundOn.value ? wistiaSoundUrl(props.wistiaId) : wistiaAutoplayUrl(props.wistiaId),
-)
-
+const embedSrc = computed(() => wistiaAutoplayUrl(props.wistiaId))
 const posterSrc = computed(() => wistiaPoster(props.wistiaId, props.posterSize))
+
+const { setMuted } = useWistiaInPlaceMute(toRef(props, 'wistiaId'), active, soundOn)
 
 function onToggleSound(event: Event) {
   event.preventDefault()
   event.stopPropagation()
+  const turningOn = !soundOn.value
   toggle()
+  // Same player, same timecode — only flip mute inside the click gesture.
+  setMuted(!turningOn)
 }
 </script>
 
@@ -55,7 +61,7 @@ function onToggleSound(event: Event) {
       :src="posterSrc"
       :alt="active ? '' : label"
       class="absolute inset-0 h-full w-full object-cover"
-      :class="active || soundOn ? '' : 'mosaic-poster-drift'"
+      :class="active ? '' : 'mosaic-poster-drift'"
       :loading="lazy ? 'lazy' : 'eager'"
       decoding="async"
       width="960"
@@ -64,16 +70,15 @@ function onToggleSound(event: Event) {
 
     <iframe
       v-if="active"
-      :key="`${wistiaId}-${soundOn ? 'sound' : 'mute'}`"
       :src="embedSrc"
       :title="label"
-      class="pointer-events-none absolute inset-0 h-full w-full"
+      class="wistia_embed pointer-events-none absolute inset-0 h-full w-full"
+      name="wistia_embed"
       frameborder="0"
-      allow="autoplay"
-      loading="lazy"
+      allow="autoplay; fullscreen"
+      loading="eager"
     />
 
-    <!-- Full-tile hit target; indicator stays small -->
     <button
       type="button"
       class="absolute inset-0 z-10 cursor-pointer touch-manipulation focus-visible:outline-none"

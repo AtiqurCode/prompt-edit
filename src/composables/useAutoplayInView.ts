@@ -1,12 +1,8 @@
 import { onMounted, onUnmounted, ref, watch, type Ref } from 'vue'
 
-const MAX_CONCURRENT = 10
-let activeCount = 0
-const waiters = new Set<() => void>()
-
 /**
- * Continuously toggles so video previews mount/autoplay while visible and
- * unmount once scrolled away. Module-level cap limits concurrent embeds.
+ * Mounts muted video previews while the tile is near the viewport
+ * and tears them down once scrolled away.
  */
 export function useAutoplayInView(
   target: Ref<HTMLElement | null>,
@@ -16,41 +12,24 @@ export function useAutoplayInView(
   const intersecting = ref(false)
   const active = ref(false)
   let observer: IntersectionObserver | null = null
-  let holdsSlot = false
 
-  function releaseSlot() {
-    if (!holdsSlot) {
+  function sync() {
+    if (enabled && !enabled.value) {
       active.value = false
       return
     }
-    activeCount -= 1
-    holdsSlot = false
-    active.value = false
-    waiters.forEach((notify) => notify())
+    active.value = intersecting.value
   }
 
-  function tryAcquire() {
-    if (enabled && !enabled.value) {
-      releaseSlot()
-      return
-    }
-    if (!intersecting.value) {
-      releaseSlot()
-      return
-    }
-    if (holdsSlot) {
-      active.value = true
-      return
-    }
-    if (activeCount < MAX_CONCURRENT) {
-      activeCount += 1
-      holdsSlot = true
-      active.value = true
-    }
-  }
+  watch(intersecting, sync)
+  if (enabled) watch(enabled, sync, { immediate: true })
 
-  watch(intersecting, tryAcquire)
-  if (enabled) watch(enabled, tryAcquire)
+  function isNearViewport(node: HTMLElement) {
+    const rect = node.getBoundingClientRect()
+    const vh = window.innerHeight || document.documentElement.clientHeight
+    const margin = 120
+    return rect.bottom > -margin && rect.top < vh + margin
+  }
 
   function attach(node: HTMLElement) {
     observer?.disconnect()
@@ -58,17 +37,15 @@ export function useAutoplayInView(
       (entries) => {
         intersecting.value = entries[0]?.isIntersecting ?? false
       },
-      { threshold: 0.15, rootMargin: '80px 0px' },
+      { threshold: 0.01, rootMargin: '160px 0px' },
     )
     observer.observe(node)
+
+    // First IO callback can lag; seed from geometry so above-the-fold demos start immediately.
+    if (isNearViewport(node)) intersecting.value = true
   }
 
   onMounted(() => {
-    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    if (prefersReduced) return
-
-    waiters.add(tryAcquire)
-
     watch(
       target,
       (node) => {
@@ -79,16 +56,9 @@ export function useAutoplayInView(
   })
 
   onUnmounted(() => {
-    waiters.delete(tryAcquire)
     observer?.disconnect()
-    releaseSlot()
+    active.value = false
   })
 
   return active
-}
-
-/** Test helper — reset module slot state between unit tests. */
-export function __resetAutoplaySlotsForTests() {
-  activeCount = 0
-  waiters.clear()
 }

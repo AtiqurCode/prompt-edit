@@ -37,11 +37,12 @@ export function wistiaPoster(wistiaId: string, size: PosterSize = 'md'): string 
   return base
 }
 
-function wistiaPreviewParams(withSound: boolean) {
+function wistiaPreviewParams() {
   return new URLSearchParams({
     autoPlay: 'true',
-    muted: withSound ? 'false' : 'true',
-    ...(withSound ? {} : { silentAutoPlay: 'true' }),
+    muted: 'true',
+    silentAutoPlay: 'true',
+    playsinline: 'true',
     endVideoBehavior: 'loop',
     playButton: 'false',
     controlsVisibleOnLoad: 'false',
@@ -54,12 +55,7 @@ function wistiaPreviewParams(withSound: boolean) {
   })
 }
 
-/** Silent, looping, chrome-free embed used for autoplay-on-scroll previews. */
+/** Silent looping embed — unmute in place via the Wistia player API. */
 export function wistiaAutoplayUrl(wistiaId: string): string {
-  return `https://fast.wistia.net/embed/iframe/${wistiaId}?${wistiaPreviewParams(false).toString()}`
-}
-
-/** Same chrome-free loop, but with sound — only after a user gesture. */
-export function wistiaSoundUrl(wistiaId: string): string {
-  return `https://fast.wistia.net/embed/iframe/${wistiaId}?${wistiaPreviewParams(true).toString()}`
+  return `https://fast.wistia.net/embed/iframe/${wistiaId}?${wistiaPreviewParams().toString()}`
 }
