@@ -43,3 +43,7 @@ prompt-edit.html
 
 # Local agent / skill scratch (never publish)
 .claude/
+.cursor/
+AGENTS.md
+CLAUDE.md
+.githooks/
